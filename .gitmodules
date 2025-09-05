@@ -1,0 +1,3 @@
+[submodule "peripherals"]
+	path = peripherals
+	url = https://github.com/Mariustotle/iot_peripherals.git
