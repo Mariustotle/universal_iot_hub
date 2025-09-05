@@ -1,0 +1,15 @@
+{
+    "Actuators" : {
+        "RelaySwitches" : 
+        [
+            {
+                "Name": "Bedroom Light Switch",
+                "Type": null,
+                "Config": {
+                    "default_status": "On",
+                    "gpio_pin": 7                    
+                }
+            }
+        ]
+    }
+}
