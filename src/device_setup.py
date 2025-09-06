@@ -1,4 +1,5 @@
 from peripherals.actuators.relay_switches.relay_factory import RelayFactory
+from peripherals.communication.analog_digital_converter.adc_factory import ADCFactory
 from peripherals.communication.i2c_expander.i2c_expander_factory import IOExpanderFactory
 from peripherals.sensors.tds_sensors.tds_factory import TDSFactory
 from src.peripheral_registry import PeripheralRegistry
@@ -24,10 +25,10 @@ class DeviceSetup:
                     logger.info(f'Registered device: {expander_device.get_description()}')
 
             if config.CommunicationModules.AnalogDigitalConverters is not None:
-                for relay in config.Actuators.RelaySwitches:
-                    relay_device = RelayFactory.create(relay, config.Simulator)
-                    registry.register_actuator(relay_device)
-                    logger.info(f'Registered device: {relay_device.get_description()}')
+                for adc in config.CommunicationModules.AnalogDigitalConverters:
+                    adc_device = ADCFactory.create(adc, config.Simulator)
+                    registry.register_communication_module(adc_device)
+                    logger.info(f'Registered device: {adc_device.get_description()}')
 
         if config.Actuators is not None:
             if config.Actuators.RelaySwitches is not None:

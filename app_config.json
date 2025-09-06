@@ -31,12 +31,12 @@
             }
         ]
     },
-    "Commmunication": {
+    "CommunicationModules": {
         "AnalogDigitalConverters": 
         [
             {
                 "name": "ADC for TDS",
-                "driver": "mcp3008",
+                "driver": "ads1115",
                 "spi_bus": 0,
                 "spi_device": 0,
                 "channel": 0
@@ -46,7 +46,7 @@
         [
             {
                 "name": "I2C for LCD",
-                "driver": "pcf8574",
+                "driver": "i2c_1602",
                 "i2c_bus": 1,
                 "i2c_address": 39
             }
