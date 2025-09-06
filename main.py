@@ -10,12 +10,12 @@ def run():
     logger.info(f'Starting IOT Hub')
     config = AppConfig.Load()
 
-    # config = RelayConfig.create(RelayStatus.Off, 9)
-
     if config.Actuators.RelaySwitches is not None:
 
         for relay in config.Actuators.RelaySwitches:
             relay_device = RelayFactory.create(relay, config.Simulator)
+
+            logger.info(f'Registered device: {relay_device.get_description()}')
 
             # Switch ON
             relay_device.switch_on()
