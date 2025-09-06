@@ -1,14 +1,20 @@
 {
+    "Simulator": false,
+    "logging": {
+        "file_name": "app.log",
+        "path": "logs//",
+        "level": "info",
+        "max_file_size_in_mb": 50,
+        "max_number_of_files": 14
+    },
     "Actuators" : {
         "RelaySwitches" : 
         [
             {
-                "Name": "Bedroom Light Switch",
-                "Type": null,
-                "Config": {
-                    "default_status": "On",
-                    "gpio_pin": 7                    
-                }
+                "default_status": "On",
+                "gpio_pin": 7,
+                "driver": "jqc3f_05vdc_c",
+                "name": "Bedroom Light"              
             }
         ]
     }

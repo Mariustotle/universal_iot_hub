@@ -12,7 +12,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 
 # Save updates to packages
-
+pip freeze > requirements.txt
 
 
 
