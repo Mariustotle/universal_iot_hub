@@ -7,6 +7,17 @@
         "max_file_size_in_mb": 50,
         "max_number_of_files": 14
     },
+    "Sensors" : {
+        "TDSSensors" : 
+        [
+            {
+                "name": "Primary TDS Sensor",
+                "gpio_pin": 17,
+                "driver": "gravity_analog_tds_sensor",
+                "analog_digital_converter_name": "Primary ADC (TDS Sensor)"
+            }
+        ]
+    },
     "Actuators" : {
         "RelaySwitches" : 
         [
