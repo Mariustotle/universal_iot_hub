@@ -18,10 +18,30 @@ class PeripheralRegistry:
         self._sensors: Dict[str, Sensor] = {}
 
     @property
-    def peripherals(self) -> 'Dict[str, Peripheral]':
-        combined: Dict[str, Peripheral] = {**self._communication_modules, **self._actuators, **self._sensors}
+    def actuators(self) -> List[Actuator]:
+        with self._lock:
+            return list(self._actuators.values())
+    
+    @property
+    def sensors(self) -> List[Sensor]:
+        with self._lock:
+            return list(self._sensors.values())
+        
+    @property
+    def communication_modules(self) -> List[Communication]:
+        with self._lock:
+            return list(self._communication_modules.values())
 
-        return combined
+    @property
+    def peripherals(self) -> List[Peripheral]:
+        with self._lock:
+            combined: List[Peripheral] = (
+                list(self._communication_modules.values())
+                + list(self._actuators.values())
+                + list(self._sensors.values())
+            )
+            return combined
+        
 
     # Registration
     def register_communication_module(self, communication: Communication) -> None:
@@ -36,26 +56,14 @@ class PeripheralRegistry:
         with self._lock:
             self._sensors[sensor.key] = sensor
 
-    # Lookups
-    def actuators(self) -> List[Actuator]:
-        with self._lock:
-            return list(self._actuators.values())
-        
+    # Lookups        
     def get_actuator(self, key: str) -> Optional[Actuator]:
         with self._lock:
             return self._actuators.get(key)
         
-    def sensors(self) -> List[Sensor]:
-        with self._lock:
-            return list(self._sensors.values())
-        
     def get_sensor(self, key: str) -> Optional[Sensor]:
         with self._lock:
             return self._sensors.get(key)        
-
-    def communication_modules(self) -> List[Communication]:
-        with self._lock:
-            return list(self._communication_modules.values())
         
     def get_communication_module(self, key: str) -> Optional[Communication]:
         with self._lock:
