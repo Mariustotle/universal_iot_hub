@@ -15,7 +15,7 @@ class DeviceRegistry:
     # Registration
     def register_actuator(self, actuator: Actuator) -> None:
         with self._lock:
-            self._actuators[actuator.id] = actuator
+            self._actuators[actuator.key] = actuator
 
     # Lookups
     def actuators(self) -> List[Actuator]:
