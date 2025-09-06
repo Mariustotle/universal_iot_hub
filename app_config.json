@@ -11,10 +11,12 @@
         "TDSSensors" : 
         [
             {
-                "name": "Primary TDS Sensor",
-                "gpio_pin": 17,
-                "driver": "gravity_analog_tds_sensor",
-                "analog_digital_converter_name": "Primary ADC (TDS Sensor)"
+                "name": "Fish Tank TDS Sensor",
+                "analog_digital_converter_name": "ADC (TDS)",
+                "adc_channel": 1,
+                "number_of_readings": 5,
+                "delay_between_readings": 0.1,
+                "driver": null               
             }
         ]
     },
@@ -22,10 +24,10 @@
         "RelaySwitches" : 
         [
             {
-                "default_status": "On",
-                "gpio_pin": 7,
+                "name": "Bedroom Light",
                 "driver": "jqc3f_05vdc_c",
-                "name": "Bedroom Light"              
+                "default_status": "On",
+                "gpio_pin": 7                            
             }
         ]
     },
@@ -33,11 +35,20 @@
         "AnalogDigitalConverters": 
         [
             {
-                "name": "Primary ADC (TDS Sensor)",
+                "name": "ADC for TDS",
                 "driver": "mcp3008",
                 "spi_bus": 0,
                 "spi_device": 0,
                 "channel": 0
+            }
+        ],
+        "I2CExpanders": 
+        [
+            {
+                "name": "I2C for LCD",
+                "driver": "pcf8574",
+                "i2c_bus": 1,
+                "i2c_address": 39
             }
         ]
     }
