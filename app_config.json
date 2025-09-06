@@ -17,5 +17,17 @@
                 "name": "Bedroom Light"              
             }
         ]
+    },
+    "Commmunication": {
+        "AnalogDigitalConverters": 
+        [
+            {
+                "name": "Primary ADC (TDS Sensor)",
+                "driver": "mcp3008",
+                "spi_bus": 0,
+                "spi_device": 0,
+                "channel": 0
+            }
+        ]
     }
 }
