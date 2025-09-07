@@ -16,6 +16,8 @@
                 "adc_channel": 1,
                 "number_of_readings": 5,
                 "delay_between_readings": 0.1,
+                "schedule_enabled": true,
+                "schedule_interval_seconds": 15,
                 "driver": null               
             }
         ]
