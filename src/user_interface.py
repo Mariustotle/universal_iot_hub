@@ -1,5 +1,8 @@
+from typing import Any
 from common.environment import Env
+from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
+from peripherals.actuators.relay_switches.relay_status import RelayStatus
 from src.peripheral_registry import PeripheralRegistry
 
 
@@ -16,8 +19,8 @@ class UserInterface:
             Env.print_paragraph(
                 "\n<<<<<<<<< Main Menu >>>>>>>>>",
                 "",
-                "1 - View latest sensor data",
-                "2 - Control an actuator",
+                "1 - Read sensor (Get sensor reading)",
+                "2 - Use actuator (Action something)",
                 "-------------------------------",
                 "X - Exit",
                 ''
@@ -35,6 +38,35 @@ class UserInterface:
                 print("Invalid selection. Try again.")
             
         Env.print("Exiting...")
+
+    def _prompt_for_params(self, params: list[ActionParam]) -> dict[str, Any]:
+        if not params:
+            return {}
+        collected: dict[str, Any] = {}
+        for p in params:
+            # Enum choices pretty display
+            hint = ""
+            if p.choices:
+                opts = list(p.choices)
+                hint = f" Options: {opts}"
+            elif isinstance(p.type_, type) and issubclass(p.type_, RelayStatus):
+                opts = [f"{i+1}:{m.name}" for i, m in enumerate(p.type_)]
+                hint = f" [{', '.join(opts)}]"
+            elif hasattr(p.type_, "__members__"):  # any Enum
+                enum_cls = p.type_
+                opts = [f"{i+1}:{m.name}" for i, m in enumerate(enum_cls)]
+                hint = f" [{', '.join(opts)}]"
+
+            default_txt = f" (default={p.default})" if not p.required and p.default is not None else ""
+            prompt = f"Enter '{p.name}' ({p.type_.__name__}){hint}{default_txt}: "
+            raw = input(prompt).strip()
+
+            if raw == "" and not p.required:
+                value = p.default
+            else:
+                value = coerce_input(raw, p.type_)
+            collected[p.name] = value
+        return collected
 
     def sensor_menu(self):
         while not self.completed:
@@ -123,7 +155,7 @@ class UserInterface:
             
             Env.print_paragraph(
                 "-------------------------------",
-                "B - Back to Main Menu",
+                "B - Back to Actuator Selection",
                 'X - Exit Application',
                 ''
             )
@@ -142,10 +174,22 @@ class UserInterface:
                     idx = int(choice) - 1
                     action = actuator.actions[idx]
                     
-                    # Request all parameters needed for action (One at a time)
-                    # Take the action
+                    # Prompt for parameters (if any)
+                    args = self._prompt_for_params(action.params)
+
+                    Env.print()
+                    Env.print(f"Executing: {action.label}")
+                    # action.func is already a bound method; call with kwargs
+                    result = action.func(**args) if args else action.func()
+                    Env.print(f"Result: {result}")
+                    Env.print()
+                    input("Press Enter to continue...")
 
                 except (ValueError, IndexError):
-                    Env.print("Invalid selection. Returning to main menu.")
+                    Env.print("Invalid selection. Returning to previous menu.")
                     return
+                except Exception as ex:
+                    Env.print(f"Error executing action: {ex}")
+                    input("Press Enter to continue...")
+
 
