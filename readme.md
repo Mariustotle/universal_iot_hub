@@ -25,14 +25,14 @@ This project is structured into:
 Make sure the following tools are installed on your system:
 
 - [VS Code](https://code.visualstudio.com/)
-- [Git for Windows](https://git-scm.com/)
-- [Fork Git Client](https://fork.dev/) — for an easy Git GUI experience
+- [Git for Windows](https://git-scm.com/) (Terminal Git)
+- [Fork Git Client](https://fork.dev/) (GUI Git)
 
 ---
 
 ### 2. Clone the Repository
 
-```bash
+```powershell
 git clone https://github.com/Mariustotle/universal_iot_hub.git
 cd universal_iot_hub
 git submodule update --init --recursive
@@ -46,18 +46,18 @@ git submodule update --init --recursive
   
 2.  Setup IoT Project
     1.  Create local virtual environment and activate it
-        ```
+        ```powershell
         python -m pip install --upgrade pip
 
         python312 -m virtualenv local_env
         ./local_env/Scripts/activate
         ```
     2.  Install packages
-        ```        
+        ```powershell 
         pip install -r requirements.txt
         ```
     3.  Setup launch file
-        ```
+        ```json
         {
             "version": "0.2.0",
             "configurations": [
@@ -74,6 +74,10 @@ git submodule update --init --recursive
    
 3.  Run the solution and interact with the menu in the console
 
+
+## IoT Specific Setup
+- [Raspbery Pi 3/4/5](device_setup/raspberry_pi_3_4_5.md)
+- [Raspberri Pi Pico](device_setup/raspberry_pi_pico.md)
 
 
 ## Quick References
