@@ -1,3 +1,4 @@
+import asyncio
 from common.logger import Logger
 from src.device_setup import DeviceSetup
 from src.peripheral_registry import PeripheralRegistry
@@ -12,7 +13,7 @@ def main():
     registry = load_configuration()  
 
     # Launch interactive menu in the main thread
-    UserInterface(registry).main_menu()
+    asyncio.run(UserInterface(registry).main_menu())
     
 
 def load_configuration() -> PeripheralRegistry:

@@ -13,7 +13,7 @@ class UserInterface:
     def __init__(self, registry: PeripheralRegistry):
         self.registry = registry
 
-    def main_menu(self):
+    async def main_menu(self):
         while not self.completed:
             Env.clear_screan()
             Env.print_paragraph(
@@ -28,9 +28,9 @@ class UserInterface:
             choice = input("Select an option: ").strip()            
 
             if choice == "1":
-                self.sensor_menu()
+                await self.sensor_menu()
             elif choice == "2":
-                self.actuator_selection_menu()
+                await self.actuator_selection_menu()
             elif choice.lower() == "x":
                 self.completed = True
                 break
@@ -68,7 +68,7 @@ class UserInterface:
             collected[p.name] = value
         return collected
 
-    def sensor_menu(self):
+    async def sensor_menu(self):
         while not self.completed:
 
             Env.clear_screan()
@@ -99,8 +99,8 @@ class UserInterface:
                     Env.clear_screan()
 
                     Env.print(f"Reading Sensor: {sensor.name} [{sensor.sensor_type.name}]")
-                    reading = sensor.read()
-                    Env.print(f"Latest Reading: >>>> {reading} <<<<")
+                    reading = await sensor.read()
+                    Env.print(reading.description)
                     Env.print()
                     input("Press Enter to continue...")
 
@@ -109,7 +109,7 @@ class UserInterface:
                     return
 
 
-    def actuator_selection_menu(self):
+    async def actuator_selection_menu(self):
         while not self.completed:
 
             Env.clear_screan()
@@ -137,14 +137,14 @@ class UserInterface:
                 try:
                     idx = int(choice) - 1
                     actuator = self.registry.actuators[idx]
-                    self.actuator_action_menu(actuator)
+                    await self.actuator_action_menu(actuator)
 
                 except (ValueError, IndexError):
                     Env.print("Invalid selection. Returning to main menu.")
                     return
 
 
-    def actuator_action_menu(self, actuator:Actuator):
+    async def actuator_action_menu(self, actuator:Actuator):
         while not self.completed:
 
             Env.clear_screan()
@@ -181,7 +181,12 @@ class UserInterface:
                     Env.print(f"Executing: {action.label}")
                     # action.func is already a bound method; call with kwargs
                     result = action.func(**args) if args else action.func()
-                    Env.print(f"Result: {result}")
+
+                    if (result != None):
+                        Env.print(f"Result: {result}")
+                    
+                    Env.print(f"{actuator.description}")
+                    
                     Env.print()
                     input("Press Enter to continue...")
 
