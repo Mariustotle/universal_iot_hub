@@ -32,7 +32,19 @@ While development can be done **directly on the Pi**, it's more efficient to use
 5. Flash the image and insert the SD card into your Pi.
 6. Power on the device and wait for it to boot.
 
----
+
+### Configure SSH on Raspberry Pi
+
+- Setup SSH (If it was not done on the installer settings)
+  
+    ```bash
+    sudo systemctl enable ssh
+    sudo systemctl start ssh
+
+    # View status
+    sudo systemctl status ssh
+    ```
+
 
 ## 2. Configure Networking
 
@@ -60,39 +72,43 @@ addresses=X.X.X.X/24
 gateway=X.X.X.X
 dns=8.8.8.8;
 ```
-Nano commands: Cntr+O (Save) then Cntr+X (Excit)
+Nano commands: Cntr+O (Save) then Cntr+X (Exit)
 
 ```bash
 sudo nmcli connection reload
 sudo nmcli connection up "{connection_name}"
 ```
 
-## Install Required Software
+## 3. Configure via PowerShell
+
+
+```PowerShell
+# Easier to configure from PowerShell on laptop than Bash on Pi
+ssh {user}@{ip} 22
+```
+
+
+## 4. Install Required Software
 
 - Update the Linux packages
     ```bash
     sudo apt update && sudo apt upgrade -y
     ```
 
-- Specific Python Version
+- Install latest Python (Should already be installed)
   
     ```bash
-    # Update system
-    sudo apt update && sudo apt upgrade -y
 
-    # Optional: install a specific version (e.g., Python 3.10)
-    sudo apt install python3.10 python3.10-venv python3.10-dev -y
+    # Install the latest version
+    sudo apt update
+    sudo apt install -y python3 python3-venv python3-pip
 
-    # Alias to make `python` point to Python 3.10
-    sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+    # View version
+    python3 --version
 
-    # Check version
-    python --version
-
-    # Upgrade pip
-    python -m ensurepip --upgrade
-    python -m pip install --upgrade pip
     ```
+
+    *You could take a longer route and install a [specific python version](device_setup/raspberry_pi_pico.md).*
 
 - Git
   
@@ -101,15 +117,7 @@ sudo nmcli connection up "{connection_name}"
 
     ```
 
-- Setup SSH (If it was not done on the installer settings)
-  
-    ```bash
-    sudo systemctl enable ssh
-    sudo systemctl start ssh
 
-    # View status
-    sudo systemctl status ssh
-    ```
 
 - VS Code Server
   
@@ -117,13 +125,13 @@ sudo nmcli connection up "{connection_name}"
 
 *Visit the official site for a more [detailed walkthrough](https://www.raspberrypi.com/documentation/computers/getting-started.html).*
 
-## Setup the project
+## 5. Setup the project
 
 1. Clone the project to 
    ```bash
     # Create and checkout to a projects folder in the root
-    md root/projects
-    cd root/projects
+    md projects
+    cd projects
     git clone https://github.com/Mariustotle/universal_iot_hub.git
     
     # Submodule checkout
@@ -135,8 +143,18 @@ sudo nmcli connection up "{connection_name}"
    
    ```bash
 
-    # Use python alias and create local_env
+    # Check that Venv is installed
+    sudo apt install -y python3-venv
+
+    # Navigate to root project folder
+    cd ~/projects/universal_iot_hub
+
+    # Create and use virtual environment
+    python3 -m venv local_env
+    . ./local_env/bin/activate
+
     # Run requirements.txt
+    pip install -r requirements.txt
 
    ```
 
