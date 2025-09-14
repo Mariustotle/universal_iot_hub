@@ -130,7 +130,7 @@ ssh {user}@{ip} 22
 1. Clone the project to 
    ```bash
     # Create and checkout to a projects folder in the root
-    md projects
+    mkdir projects
     cd projects
     git clone https://github.com/Mariustotle/universal_iot_hub.git
     
@@ -159,7 +159,9 @@ ssh {user}@{ip} 22
    ```
 
 3. Configure VS Code for remote access
-    - Do x
+    - Install Extensions
+      - Python
+  
     - Do y. 
 
 
