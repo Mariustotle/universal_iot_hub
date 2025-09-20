@@ -12,9 +12,13 @@ A modular, extensible IoT Hub built in Python for enthusiasts and developers to 
 
 This project is structured into:
 
+### Repositories
 - **Core IoT Hub**: Main runtime logic and thread orchestration.
 - **Peripheral Submodule**: Reusable device definitions (sensors, actuators, communication modules).
 🔗 [Peripheral Submodule on GitHub »](https://github.com/Mariustotle/universal_iot_hub)
+
+### Supported Peripherals
+The IoT platforms is configuration based, so you just need to configure the peripherals you want and it will load them up in the menu.  You can browse the available [peripherals here](peripherals/peripheral_index.md).
 
 ---
 
@@ -179,12 +183,6 @@ git submodule update --init --recursive
 ## IoT Specific Setup
 - [Raspbery Pi 3/4/5](device_setup/raspberry_pi_3_4_5.md)
 - [Raspberri Pi Pico](device_setup/raspberry_pi_pico.md)
-
-### Peripheral Configuration
-The IoT platforms is configuration based, so you just need to configure the peripherals you want and it will load them up in the menu. 
-
-*Browse the available [peripherals here](device_setup/peripheral_configuration.md).*
-
 
 
 ## Quick References
