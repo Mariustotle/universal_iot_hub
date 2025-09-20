@@ -193,3 +193,4 @@ git submodule update --init --recursive
 
 ### Python
 - pip freeze > requirements.txt
+- source local_env/bin/activate (Linux env activation)
