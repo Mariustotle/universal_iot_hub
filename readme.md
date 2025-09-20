@@ -186,5 +186,10 @@ git submodule update --init --recursive
 
 
 ## Quick References
+
+### VS Code
 - Cntr+Shift+P = Select Interpreter
 - Cntr+K then v = View Markdown
+
+### Python
+- pip freeze > requirements.txt
