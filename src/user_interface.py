@@ -163,10 +163,12 @@ class UserInterface:
             choice = input("Select an option: ").strip() 
             
             if choice.lower() == 'x':
+                actuator.cleanup()
                 self.completed = True      
                 break      
             
             elif choice.lower() == 'b':
+                actuator.cleanup()
                 break
             
             else:
