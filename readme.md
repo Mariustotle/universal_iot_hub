@@ -18,7 +18,7 @@ This project is structured into:
 🔗 [Peripheral Submodule on GitHub »](https://github.com/Mariustotle/universal_iot_hub)
 
 ### Supported Peripherals
-The IoT platforms is configuration based, so you just need to configure the peripherals you want and it will load them up in the menu.  You can browse the available [peripherals here](peripherals/peripheral_index.md).
+The IoT platforms is configuration based, so you just need to configure the peripherals you want and it will load them up in the menu.  You can browse the available [peripherals here](./peripherals/peripheral_index.md).
 
 ---
 
@@ -181,8 +181,8 @@ git submodule update --init --recursive
 
 
 ## IoT Specific Setup
-- [Raspbery Pi 3/4/5](device_setup/raspberry_pi_3_4_5.md)
-- [Raspberri Pi Pico](device_setup/raspberry_pi_pico.md)
+- [Raspbery Pi 3/4/5](./device_setup/raspberry_pi_3_4_5.md)
+- [Raspberri Pi Pico](./device_setup/raspberry_pi_pico.md)
 
 
 ## Quick References
