@@ -1,5 +1,5 @@
 {
-    "Simulator": false,
+    "Simulator": true,
     "logging": {
         "file_name": "app.log",
         "path": "logs//",
@@ -29,7 +29,7 @@
                 "name": "Bedroom Light",
                 "driver": "jqc3f_05vdc_c",
                 "default_status": "On",
-                "gpio_pin": 7                            
+                "gpio_pin": 17                            
             }
         ]
     },
