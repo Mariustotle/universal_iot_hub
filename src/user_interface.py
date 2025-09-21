@@ -1,3 +1,4 @@
+import time
 from typing import Any
 from common.environment import Env
 from peripherals.actuators.action_decorator import ActionParam, coerce_input
@@ -38,6 +39,7 @@ class UserInterface:
                 print("Invalid selection. Try again.")
             
         Env.print("Exiting...")
+        Env.print()
 
     def _prompt_for_params(self, params: list[ActionParam]) -> dict[str, Any]:
         if not params:
@@ -137,6 +139,11 @@ class UserInterface:
                 try:
                     idx = int(choice) - 1
                     actuator = self.registry.actuators[idx]
+                    actuator.initialize()
+                    Env.clear_screan()
+                    Env.print(f"Initialized {actuator.name}...")
+                    time.sleep(1)
+
                     await self.actuator_action_menu(actuator)
 
                 except (ValueError, IndexError):
@@ -145,10 +152,11 @@ class UserInterface:
 
 
     async def actuator_action_menu(self, actuator:Actuator):
+
         while not self.completed:
 
             Env.clear_screan()
-            Env.print_paragraph(f"<<<<<<<<< [{actuator.name}] Actions >>>>>>>>>","")
+            Env.print_paragraph(f"<<<<<<<<< {actuator.name} Available Actions >>>>>>>>>", actuator, "")
 
             for i, action in enumerate(actuator.actions):
                 print(f"{i + 1} - {action.label} ({action.description})")
@@ -164,17 +172,30 @@ class UserInterface:
             
             if choice.lower() == 'x':
                 actuator.cleanup()
-                self.completed = True      
+                self.completed = True
+                
+                Env.clear_screan()
+                Env.print(f"Finished cleaning up {actuator.name}...")
+                time.sleep(1)
+
                 break      
             
             elif choice.lower() == 'b':
                 actuator.cleanup()
+                self.completed = True
+
+                Env.clear_screan()
+                Env.print(f"Finished cleaning up {actuator.name}...")
+                time.sleep(1)
+
                 break
             
             else:
                 try:
                     idx = int(choice) - 1
                     action = actuator.actions[idx]
+
+                    Env.clear_screan()
                     
                     # Prompt for parameters (if any)
                     args = self._prompt_for_params(action.params)
@@ -187,7 +208,7 @@ class UserInterface:
                     if (result != None):
                         Env.print(f"Result: {result}")
                     
-                    Env.print(f"{actuator}")
+                    Env.print_paragraph("", "New Status:", actuator)
                     
                     Env.print()
                     input("Press Enter to continue...")
