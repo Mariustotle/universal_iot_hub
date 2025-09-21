@@ -193,4 +193,19 @@ git submodule update --init --recursive
 
 ### Python
 - pip freeze > requirements.txt
-- source local_env/bin/activate (Linux env activation)
+
+
+### Linux Run from Bash
+
+```bash
+# Navigate to project folder
+cd projects/universal_iot_hub/
+
+# Activate local python
+source local_env/bin/activate
+
+# Start application
+python main.py
+```
+
+
