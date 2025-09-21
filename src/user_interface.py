@@ -139,10 +139,16 @@ class UserInterface:
                 try:
                     idx = int(choice) - 1
                     actuator = self.registry.actuators[idx]
-                    actuator.initialize()
                     Env.clear_screan()
-                    Env.print(f"Initialized {actuator.name}...")
-                    time.sleep(1)
+
+                    initialized = actuator.initialize()
+                    if initialized:                    
+                        Env.print(f"Initialized {actuator.name}...")
+                        time.sleep(1)
+                    else:
+                        Env.print(f"Failed to initialize {actuator.name}. Returning to main menu...")
+                        time.sleep(5)
+                        continue
 
                     await self.actuator_action_menu(actuator)
 
