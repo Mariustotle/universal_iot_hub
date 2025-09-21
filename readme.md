@@ -201,6 +201,10 @@ git submodule update --init --recursive
 # Navigate to project folder
 cd projects/universal_iot_hub/
 
+# Update to latest code
+git fetch
+git submodule update
+
 # Activate local python
 source local_env/bin/activate
 
