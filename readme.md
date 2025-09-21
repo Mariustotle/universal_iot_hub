@@ -203,6 +203,7 @@ cd projects/universal_iot_hub/
 
 # Update to latest code
 git fetch
+git pull
 git submodule update
 
 # Activate local python
