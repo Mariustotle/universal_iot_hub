@@ -146,8 +146,8 @@ class UserInterface:
                         Env.print(f"Initialized {actuator.name}...")
                         time.sleep(1)
                     else:
-                        Env.print(f"Failed to initialize {actuator.name}. Returning to main menu...")
-                        time.sleep(5)
+                        Env.print_paragraph(f"Failed to initialize {actuator.name}. Returning to main menu...","")
+                        input("Press Enter to continue...")
                         continue
 
                     await self.actuator_action_menu(actuator)
