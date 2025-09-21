@@ -30,7 +30,7 @@
                 "driver": "jqc3f_05vdc_c",
                 "default_power_status": "Off",
                 "gpio_pin": 12,
-                "is_low_voltage_trigger": true                    
+                "is_low_voltage_trigger": false                    
             }
         ]
     },
