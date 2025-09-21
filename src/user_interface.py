@@ -2,7 +2,7 @@ from typing import Any
 from common.environment import Env
 from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
-from peripherals.actuators.relay_switches.relay_status import RelayStatus
+from peripherals.contracts.on_off_status import OnOffStatus
 from src.peripheral_registry import PeripheralRegistry
 
 
@@ -49,7 +49,7 @@ class UserInterface:
             if p.choices:
                 opts = list(p.choices)
                 hint = f" Options: {opts}"
-            elif isinstance(p.type_, type) and issubclass(p.type_, RelayStatus):
+            elif isinstance(p.type_, type) and issubclass(p.type_, OnOffStatus):
                 opts = [f"{i+1}:{m.name}" for i, m in enumerate(p.type_)]
                 hint = f" [{', '.join(opts)}]"
             elif hasattr(p.type_, "__members__"):  # any Enum
@@ -187,7 +187,7 @@ class UserInterface:
                     if (result != None):
                         Env.print(f"Result: {result}")
                     
-                    Env.print(f"{actuator.description}")
+                    Env.print(f"{actuator}")
                     
                     Env.print()
                     input("Press Enter to continue...")
