@@ -1,9 +1,11 @@
 import time
-from typing import Any
+from typing import Any, Optional
 from common.environment import Env
 from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
 from peripherals.contracts.on_off_status import OnOffStatus
+from peripherals.sensors.read_decorator import ReadAction
+from peripherals.sensors.sensor import Sensor
 from src.peripheral_registry import PeripheralRegistry
 
 
@@ -29,7 +31,7 @@ class UserInterface:
             choice = input("Select an option: ").strip()            
 
             if choice == "1":
-                await self.sensor_menu()
+                await self.sensor_selection_menu()
             elif choice == "2":
                 await self.actuator_selection_menu()
             elif choice.lower() == "x":
@@ -40,6 +42,7 @@ class UserInterface:
             
         Env.print("Exiting...")
         Env.print()
+
 
     def _prompt_for_params(self, params: list[ActionParam]) -> dict[str, Any]:
         if not params:
@@ -69,8 +72,9 @@ class UserInterface:
                 value = coerce_input(raw, p.type_)
             collected[p.name] = value
         return collected
+    
 
-    async def sensor_menu(self):
+    async def sensor_selection_menu(self):
         while not self.completed:
 
             Env.clear_screan()
@@ -100,15 +104,116 @@ class UserInterface:
                     sensor = self.registry.sensors[idx]
                     Env.clear_screan()
 
-                    Env.print(f"Reading Sensor: {sensor.name} [{sensor.sensor_type.name}]")
-                    reading = await sensor.read()
-                    Env.print(reading.description)
-                    Env.print()
-                    input("Press Enter to continue...")
+                    initialized = sensor.initialize()
+
+                    if initialized:                    
+                        Env.print(f"Initialized {sensor.name}...")
+                        time.sleep(1)
+                    else:
+                        Env.print_paragraph(f"Failed to initialize {sensor.name}. Returning to main menu...","")
+                        input("Press Enter to continue...")
+                        continue
+
+                    await self.sensor_action_menu(sensor)
+
 
                 except (ValueError, IndexError):
                     Env.print("Invalid selection. Returning to main menu.")
                     return
+                
+    async def sensor_action_menu(self, sensor:Sensor):
+
+        # If only one reading option, skip menu and monitor
+        if (sensor.reading_options is None or len(sensor.reading_options) == 1):
+            Env.clear_screan()
+            Env.print(f"Only one reading option available. Starting monitoring of {sensor.name} every 5 seconds...")
+            time.sleep(2)
+
+            await self.monitor_sensor(sensor, sensor.reading_options[0], 5)
+            return
+
+        while not self.completed:
+
+            Env.clear_screan()
+            Env.print_paragraph(f"<<<<<<<<< {sensor.name} Reading Options >>>>>>>>>", sensor, "")
+
+            for i, action in enumerate(sensor.reading_options):
+                print(f"{i + 1} - {action.label} ({action.description})")
+            
+            Env.print_paragraph(
+                "-------------------------------",
+                "B - Back to Sensor Selection",
+                'X - Exit Application',
+                ''
+            )
+
+            choice = input("Select an option: ").strip() 
+            
+            if choice.lower() == 'x':
+                sensor.cleanup()
+                self.completed = True
+                
+                Env.clear_screan()
+                Env.print(f"Finished cleaning up {sensor.name}...")
+                time.sleep(1)
+
+                break      
+            
+            elif choice.lower() == 'b':
+                sensor.cleanup()
+                self.completed = True
+
+                Env.clear_screan()
+                Env.print(f"Finished cleaning up {sensor.name}...")
+                time.sleep(1)
+
+                break
+            
+            else:
+                try:
+                    idx = int(choice) - 1
+                    action = sensor.reading_options[idx]
+
+                    Env.clear_screan()
+                    
+                    # Prompt for parameters (if any)
+                    args = self._prompt_for_params(action.params)
+
+                    Env.print()
+                    Env.print(f"Executing: {action.label}")
+
+                    await self.monitor_sensor(sensor, action, 5, args)
+
+
+                except (ValueError, IndexError):
+                    Env.print("Invalid selection. Returning to previous menu.")
+                    return
+                except Exception as ex:
+                    Env.print(f"Error executing action: {ex}")
+                    input("Press Enter to continue...")
+
+
+    async def monitor_sensor(self, sensor:Sensor, reading_option:ReadAction, interval_seconds:int, args:Optional[dict[str, Any]]=None):      
+
+        try:
+            counter = 0
+
+            while True:           
+                counter += 1
+                result = reading_option.func(**args) if args else reading_option.func()
+
+                Env.clear_screan() 
+                Env.print_paragraph(f"<<<<<<<<< Monitoring {sensor.name} >>>>>>>>>", sensor, f"Refresh Counter: {counter}", "")
+
+                Env.print(f"Result: {result}")
+
+                time.sleep(interval_seconds)
+
+
+        except Exception as ex:
+            Env.print(f"Error monitoring sensor [{sensor.name}] with action [{reading_option.label}]. Details: {ex}")
+            input("Press Enter to continue...")
+
 
 
     async def actuator_selection_menu(self):
@@ -158,7 +263,6 @@ class UserInterface:
 
 
     async def actuator_action_menu(self, actuator:Actuator):
-
         while not self.completed:
 
             Env.clear_screan()
