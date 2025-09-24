@@ -126,10 +126,10 @@ class UserInterface:
         # If only one reading option, skip menu and monitor
         if (sensor.reading_options is None or len(sensor.reading_options) == 1):
             Env.clear_screan()
-            Env.print(f"Only one reading option available. Starting monitoring of {sensor.name} every 5 seconds...")
+            Env.print(f"Only one reading option available. Starting monitoring of {sensor.name} every 3 seconds...")
             time.sleep(2)
 
-            await self.monitor_sensor(sensor, sensor.reading_options[0], 5)
+            self.monitor_sensor(sensor, sensor.reading_options[0], 3)
             return
 
         while not self.completed:
