@@ -193,26 +193,32 @@ class UserInterface:
                     input("Press Enter to continue...")
 
 
-    async def monitor_sensor(self, sensor:Sensor, reading_option:ReadAction, interval_seconds:int, args:Optional[dict[str, Any]]=None):      
-
+    def monitor_sensor(
+        self,
+        sensor: Sensor,
+        reading_option: ReadAction,
+        interval_seconds: int,
+        args: Optional[dict[str, Any]] = None
+    ):
         try:
-            counter = 0
-
-            while True:           
-                counter += 1
+            def read_callback(counter):
                 result = reading_option.func(**args) if args else reading_option.func()
+                Env.clear_screan()
+                Env.print_paragraph(
+                    f"<<<<<<<<< Monitoring {sensor.name} >>>>>>>>>",
+                    sensor,
+                    f"Refresh Counter: {counter}",
+                    "",
+                    f"Result: {result}", "", 
+                    "<<<<< Press any key to stop monitoring >>>>>", ""
+                )
 
-                Env.clear_screan() 
-                Env.print_paragraph(f"<<<<<<<<< Monitoring {sensor.name} >>>>>>>>>", sensor, f"Refresh Counter: {counter}", "")
-
-                Env.print(f"Result: {result}")
-
-                time.sleep(interval_seconds)
-
+            Env.monitor_until_keypress(read_callback, interval_seconds)
 
         except Exception as ex:
             Env.print(f"Error monitoring sensor [{sensor.name}] with action [{reading_option.label}]. Details: {ex}")
             input("Press Enter to continue...")
+
 
 
 
