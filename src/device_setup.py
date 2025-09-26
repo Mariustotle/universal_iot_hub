@@ -1,7 +1,7 @@
 from peripherals.actuators.relay_switches.factory import RelayFactory
 from peripherals.communication.analog_digital_converter.adc_factory import ADCFactory
 from peripherals.communication.i2c_expander.i2c_expander_factory import IOExpanderFactory
-from peripherals.sensors.digital_temp_sensors.factory import DigitalTempFactory
+from peripherals.sensors.temperature_switch.factory import TempSwitchFactory
 from peripherals.sensors.tds_sensors.factory import TDSFactory
 from src.peripheral_registry import PeripheralRegistry
 from src.config.app_config import AppConfig
@@ -47,11 +47,11 @@ class DeviceSetup:
                     logger.info(f'Registered device: {tds_device.get_description()}')
 
 
-            if config.Sensors.DigitalTemperatureSensors is not None:        
-                for digital_temp_config in config.Sensors.DigitalTemperatureSensors:
-                    digital_temp = DigitalTempFactory.create(digital_temp_config, config.Simulator)
-                    registry.register_sensor(digital_temp)
-                    logger.info(f'Registered device: {digital_temp.get_description()}')
+            if config.Sensors.TemperatureSwitches is not None:        
+                for temp_switch_config in config.Sensors.TemperatureSwitches:
+                    temp_switch = TempSwitchFactory.create(temp_switch_config, config.Simulator)
+                    registry.register_sensor(temp_switch)
+                    logger.info(f'Registered device: {temp_switch.get_description()}')
 
         return registry
 

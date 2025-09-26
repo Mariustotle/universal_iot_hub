@@ -8,12 +8,14 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
-        "DigitalTemperatureSensors" :
+        "TemperatureSwitches" :
         [
             {
                 "name": "Server Room Temperature",
+                "adc_module": "module a",
                 "driver": null,
-                "gpio_pin": 4,
+                "gpio_out_pin": 4,
+                "switch_threshold": 12.3,
                 "measurement": "Celsius"
             }
         ],
