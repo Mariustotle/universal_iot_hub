@@ -218,7 +218,7 @@ class UserInterface:
             Env.monitor_until_keypress(read_callback, interval_seconds)
 
         except Exception as ex:
-            Env.print(f"Error monitoring sensor [{sensor.name}] with action [{reading_option.label}]. Details: {ex}")
+            Env.print(f"Error monitoring sensor [{sensor.name}] reading [{reading_option.label}]. Details: {ex}")
             input("Press Enter to continue...")
 
 

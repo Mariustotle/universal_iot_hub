@@ -8,16 +8,23 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
+        "DigitalTemperatureSensors" :
+        [
+            {
+                "name": "Server Room Temperature",
+                "driver": null,
+                "gpio_pin": 4,
+                "measurement": "Celsius"
+            }
+        ],
         "TDSSensors" : 
         [
             {
                 "name": "Fish Tank TDS Sensor",
                 "analog_digital_converter_name": "ADC (TDS)",
                 "adc_channel": 1,
-                "number_of_readings": 5,
+                "number_of_readings": 2,
                 "delay_between_readings": 0.1,
-                "schedule_enabled": true,
-                "schedule_interval_seconds": 15,
                 "driver": null               
             }
         ]

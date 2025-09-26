@@ -1,8 +1,9 @@
 from typing import List
 from pydantic import BaseModel
 
-from src.config.peripherals.sensors.tds_config_extension import TDSConfigExtension
-
+from peripherals.sensors.digital_temp_sensors.config import DigitalTempConfig
+from peripherals.sensors.tds_sensors.config import TDSConfig
 
 class SensorsConfig(BaseModel):
-    TDSSensors: List[TDSConfigExtension] = None
+    TDSSensors: List[TDSConfig] = None
+    DigitalTemperatureSensors: List[DigitalTempConfig] = None
