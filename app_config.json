@@ -8,14 +8,12 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
-        "TemperatureSwitches" :
+        "DigitalTemperatureSensors" :
         [
             {
-                "name": "Server Room Temperature",
-                "adc_module": "module a",
+                "name": "Office Temp and Humidity",
                 "driver": null,
-                "gpio_out_pin": 4,
-                "switch_threshold": 12.3,
+                "gpio_pin": 18,
                 "measurement": "Celsius"
             }
         ],

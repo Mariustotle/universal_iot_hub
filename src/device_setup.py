@@ -1,6 +1,8 @@
 from peripherals.actuators.relay_switches.factory import RelayFactory
 from peripherals.communication.analog_digital_converter.adc_factory import ADCFactory
 from peripherals.communication.i2c_expander.i2c_expander_factory import IOExpanderFactory
+from peripherals.sensors.digital_temp_sensors.factory import DigitalTempFactory
+from peripherals.sensors.sensor import Sensor
 from peripherals.sensors.temperature_switch.factory import TempSwitchFactory
 from peripherals.sensors.tds_sensors.factory import TDSFactory
 from src.peripheral_registry import PeripheralRegistry
@@ -10,7 +12,7 @@ from common.logger import Logger
 logger = Logger.get_instance()
 
 class DeviceSetup:
-    
+
     @staticmethod
     def initialize() -> PeripheralRegistry:
 
@@ -38,20 +40,25 @@ class DeviceSetup:
                     registry.register_actuator(relay_device)
                     logger.info(f'Registered device: {relay_device.get_description()}')
 
-        if config.Sensors is not None:        
+        if config.Sensors is not None:
 
             if config.Sensors.TDSSensors is not None:        
-                for tds in config.Sensors.TDSSensors:
-                    tds_device = TDSFactory.create(tds, config.Simulator)
-                    registry.register_sensor(tds_device)
-                    logger.info(f'Registered device: {tds_device.get_description()}')
-
+                for sensor_config in config.Sensors.TDSSensors:
+                    sensor = TDSFactory.create(sensor_config, config.Simulator)
+                    registry.register_sensor(sensor)
+                    logger.info(f'Registered device: {sensor.get_description()}')
 
             if config.Sensors.TemperatureSwitches is not None:        
-                for temp_switch_config in config.Sensors.TemperatureSwitches:
-                    temp_switch = TempSwitchFactory.create(temp_switch_config, config.Simulator)
-                    registry.register_sensor(temp_switch)
-                    logger.info(f'Registered device: {temp_switch.get_description()}')
+                for sensor_config in config.Sensors.TemperatureSwitches:
+                    sensor = TempSwitchFactory.create(sensor_config, config.Simulator)
+                    registry.register_sensor(sensor)
+                    logger.info(f'Registered device: {sensor.get_description()}')
+
+            if config.Sensors.DigitalTemperatureSensors is not None:        
+                for sensor_config in config.Sensors.DigitalTemperatureSensors:
+                    sensor = DigitalTempFactory.create(sensor_config, config.Simulator)                   
+                    registry.register_sensor(sensor)
+                    logger.info(f'Registered device: {sensor.get_description()}')            
 
         return registry
 
