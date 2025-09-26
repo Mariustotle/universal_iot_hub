@@ -22,8 +22,6 @@ def load_configuration() -> PeripheralRegistry:
 
     return registry
 
-
-
 if __name__ == "__main__":
     main()
    

@@ -203,13 +203,15 @@ class UserInterface:
         try:
             def read_callback(counter):
                 result = reading_option.func(**args) if args else reading_option.func()
+                readable_response = result.__str__() if hasattr(result, "__str__") else str(result)
+
                 Env.clear_screan()
                 Env.print_paragraph(
                     f"<<<<<<<<< Monitoring {sensor.name} >>>>>>>>>",
                     sensor,
                     f"Refresh Counter: {counter}",
                     "",
-                    f"Result: {result}", "", 
+                    f"Result: {readable_response}", "", 
                     "<<<<< Press any key to stop monitoring >>>>>", ""
                 )
 

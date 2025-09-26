@@ -1,4 +1,4 @@
-from peripherals.sensors.tds_sensors.tds_config import TDSConfig
+from peripherals.sensors.tds_sensors.config import TDSConfig
 
 class TDSConfigExtension(TDSConfig):
     schedule_enabled: bool = True
