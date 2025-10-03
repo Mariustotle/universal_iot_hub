@@ -8,7 +8,7 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
-        "TemperatureSwitches" :
+        "DigitalTemperatureSensors" :
         [
             {
                 "name": "Server Room Temperature",
