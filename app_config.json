@@ -8,12 +8,12 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
-        "DigitalTemperatureSensors" :
+        "TemperatureSwitches" :
         [
             {
-                "name": "Office Temp and Humidity",
+                "name": "Server Room Temperature",
                 "driver": null,
-                "gpio_pin": 18,
+                "gpio_pin": 12,
                 "measurement": "Celsius"
             }
         ],
