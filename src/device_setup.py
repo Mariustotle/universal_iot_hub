@@ -1,6 +1,7 @@
 from peripherals.actuators.relay_switches.factory import RelayFactory
 from peripherals.communication.analog_digital_converter.adc_factory import ADCFactory
 from peripherals.communication.i2c_expander.i2c_expander_factory import IOExpanderFactory
+from peripherals.sensors.digital_i2c_combo_sensor.factory import DigitalComboFactory
 from peripherals.sensors.digital_temp_sensors.factory import DigitalTempFactory
 from peripherals.sensors.sensor import Sensor
 from peripherals.sensors.temperature_switch.factory import TempSwitchFactory
@@ -58,7 +59,13 @@ class DeviceSetup:
                 for sensor_config in config.Sensors.DigitalTemperatureSensors:
                     sensor = DigitalTempFactory.create(sensor_config, config.Simulator)                   
                     registry.register_sensor(sensor)
-                    logger.info(f'Registered device: {sensor.get_description()}')            
+                    logger.info(f'Registered device: {sensor.get_description()}')
+
+            if config.Sensors.I2CComboSensors is not None:        
+                for sensor_config in config.Sensors.I2CComboSensors:
+                    sensor = DigitalComboFactory.create(sensor_config, config.Simulator)                   
+                    registry.register_sensor(sensor)
+                    logger.info(f'Registered device: {sensor.get_description()}')      
 
         return registry
 

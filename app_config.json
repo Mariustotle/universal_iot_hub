@@ -8,12 +8,12 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
-        "DigitalTemperatureSensors" :
+        "I2CComboSensors" :
         [
             {
-                "name": "Server Room Temperature",
+                "name": "Workshop ENV Sensor",
                 "driver": null,
-                "gpio_pin": 12,
+                "i2c_address": "0x76",
                 "measurement": "Celsius"
             }
         ],
