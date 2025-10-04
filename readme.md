@@ -198,6 +198,16 @@ git submodule update --init --recursive
 ### Linux Run from Bash
 
 ```bash
+
+# View git status
+git status
+
+# Revert specific local changes
+git restore filename
+
+# Edit config (Remove simulator mode)
+sudo nano app_config.json
+
 # Navigate to project folder
 cd projects/universal_iot_hub/
 
