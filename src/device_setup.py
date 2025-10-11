@@ -50,6 +50,7 @@ class DeviceSetup:
 
 
         catalog = DeviceCatalog(is_simulated=config.Simulator, 
+            device_type=config.Device,
             sensors_config=sensors_config,
             actuators_config=actuators_config,
             communications_config=communications_config) 

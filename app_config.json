@@ -1,5 +1,6 @@
 {
     "Simulator": true,
+    "Device": "Raspberry Pi 3",
     "logging": {
         "file_name": "app.log",
         "path": "logs//",

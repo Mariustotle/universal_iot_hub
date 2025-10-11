@@ -1,7 +1,7 @@
 from typing import Any, Optional
 from pydantic import BaseModel
 
-from peripherals.communication.i2c_multiplexer.i2c_multiplexer_driver import I2CMultiplexerDriver
+from peripherals.communication.i2c_multiplexer.i2c_multiplexer import I2CMultiplexer
 
 class I2CMultiplexerReferenceConfig(BaseModel):
     name: str = None
@@ -9,9 +9,9 @@ class I2CMultiplexerReferenceConfig(BaseModel):
     _multiplexer:Optional[Any] = None
 
     @property
-    def i2c_multiplexer(self) -> 'I2CMultiplexerDriver':
+    def i2c_multiplexer(self) -> 'I2CMultiplexer':
         return self._multiplexer
 
-    def set_multiplexer(self, multiplexer: 'I2CMultiplexerDriver'):
+    def set_multiplexer(self, multiplexer: 'I2CMultiplexer'):
         self._multiplexer = multiplexer
 

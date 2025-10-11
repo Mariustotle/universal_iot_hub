@@ -2,6 +2,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from common.contracts.logging import Logging
+from peripherals.contracts.device_type import DeviceType
 from src.contracts.actuators_config import ActuatorsConfig
 from src.contracts.communications_config import CommunicationsConfig
 from src.contracts.sensors_config import SensorsConfig
@@ -10,6 +11,7 @@ import json
 
 class AppConfig(BaseModel):
     Simulator: bool = None
+    Device: DeviceType = None
     logging: Logging = None
     Actuators: Optional[ActuatorsConfig] = None
     Sensors: Optional[SensorsConfig] = None
