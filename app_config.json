@@ -12,9 +12,13 @@
         [
             {
                 "name": "Workshop ENV Sensor",
-                "driver": null,
+                "driver": null,                
+                "measurement": "Celsius",
                 "i2c_address": "0x76",
-                "measurement": "Celsius"
+                "multiplexer": {
+                    "name": "I2C Extender",
+                    "channel": 0
+                }
             }
         ],
         "TDSSensors" : 

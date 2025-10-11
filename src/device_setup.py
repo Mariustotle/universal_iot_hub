@@ -1,9 +1,8 @@
 from peripherals.actuators.relay_switches.factory import RelayFactory
-from peripherals.communication.analog_digital_converter.adc_factory import ADCFactory
-from peripherals.communication.i2c_expander.i2c_expander_factory import IOExpanderFactory
+from peripherals.communication.analog_digital_converter.adc_driver import ADCDriver
+from peripherals.communication.i2c_multiplexer.i2c_multiplier_driver import I2CExpanderDriver
 from peripherals.sensors.digital_i2c_combo_sensor.factory import DigitalComboFactory
 from peripherals.sensors.digital_temp_sensors.factory import DigitalTempFactory
-from peripherals.sensors.sensor import Sensor
 from peripherals.sensors.temperature_switch.factory import TempSwitchFactory
 from peripherals.sensors.tds_sensors.factory import TDSFactory
 from src.peripheral_registry import PeripheralRegistry
@@ -24,13 +23,13 @@ class DeviceSetup:
 
             if config.CommunicationModules.I2CExpanders is not None:
                 for expander in config.CommunicationModules.I2CExpanders:
-                    expander_device = IOExpanderFactory.create(expander, config.Simulator)
+                    expander_device = I2CExpanderDriver(expander, config.Simulator)
                     registry.register_communication_module(expander_device)
                     logger.info(f'Registered device: {expander_device.get_description()}')
 
             if config.CommunicationModules.AnalogDigitalConverters is not None:
                 for adc in config.CommunicationModules.AnalogDigitalConverters:
-                    adc_device = ADCFactory.create(adc, config.Simulator)
+                    adc_device = ADCDriver(adc, config.Simulator)
                     registry.register_communication_module(adc_device)
                     logger.info(f'Registered device: {adc_device.get_description()}')
 
