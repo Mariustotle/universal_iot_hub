@@ -3,18 +3,17 @@ from typing import Any, Optional
 from common.environment import Env
 from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
+from peripherals.catalog.device_catalog import DeviceCatalog
 from peripherals.contracts.on_off_status import OnOffStatus
 from peripherals.sensors.read_decorator import ReadAction
 from peripherals.sensors.sensor import Sensor
-from src.peripheral_registry import PeripheralRegistry
-
 
 class UserInterface:
-
     completed:bool = False
+    catalog:DeviceCatalog = None
 
-    def __init__(self, registry: PeripheralRegistry):
-        self.registry = registry
+    def __init__(self, catalog: DeviceCatalog):
+        self.catalog = catalog
 
     async def main_menu(self):
         while not self.completed:
@@ -79,7 +78,7 @@ class UserInterface:
 
             Env.clear_screan()
             Env.print_paragraph("<<<<<<<<< Read Sensors >>>>>>>>>","")
-            for i, sensor in enumerate(self.registry.sensors):
+            for i, sensor in enumerate(self.catalog.sensors.all):
                 print(f"{i + 1}. {sensor.name} [{sensor.sensor_type.name}]")
             
             Env.print_paragraph(
@@ -101,7 +100,7 @@ class UserInterface:
             else:
                 try:
                     idx = int(choice) - 1
-                    sensor = self.registry.sensors[idx]
+                    sensor = self.catalog.sensors.all[idx]
                     Env.clear_screan()
 
                     initialized = sensor.initialize()
@@ -229,7 +228,7 @@ class UserInterface:
 
             Env.clear_screan()
             Env.print_paragraph("<<<<<<<<< Actuator Selection >>>>>>>>>","")
-            for i, actuator in enumerate(self.registry.actuators):
+            for i, actuator in enumerate(self.catalog.actuators.all):
                 print(f"{i + 1}. {actuator.name} [{actuator.actuator_type.name}]")
             
             Env.print_paragraph(
@@ -251,7 +250,7 @@ class UserInterface:
             else:
                 try:
                     idx = int(choice) - 1
-                    actuator = self.registry.actuators[idx]
+                    actuator = self.catalog.actuators.all[idx]
                     Env.clear_screan()
 
                     initialized = actuator.initialize()

@@ -4,7 +4,7 @@ from typing import Optional
 from common.config_reader import ConfigReader
 from common.contracts.logging import Logging
 from src.contracts.actuators_config import ActuatorsConfig
-from src.contracts.communication_config import CommunicationConfig
+from src.contracts.communications_config import CommunicationsConfig
 from src.contracts.sensors_config import SensorsConfig
 
 import json
@@ -14,7 +14,7 @@ class AppConfig(BaseModel):
     logging: Logging = None
     Actuators: Optional[ActuatorsConfig] = None
     Sensors: Optional[SensorsConfig] = None
-    CommunicationModules: Optional[CommunicationConfig] = None
+    CommunicationModules: Optional[CommunicationsConfig] = None
 
     @staticmethod
     def Load() -> 'AppConfig':

@@ -1,11 +1,5 @@
-from peripherals.actuators.relay_switches.factory import RelayFactory
-from peripherals.communication.analog_digital_converter.adc_driver import ADCDriver
-from peripherals.communication.i2c_multiplexer.i2c_multiplier_driver import I2CExpanderDriver
-from peripherals.sensors.digital_i2c_combo_sensor.factory import DigitalComboFactory
-from peripherals.sensors.digital_temp_sensors.factory import DigitalTempFactory
-from peripherals.sensors.temperature_switch.factory import TempSwitchFactory
-from peripherals.sensors.tds_sensors.factory import TDSFactory
-from src.peripheral_registry import PeripheralRegistry
+from typing import Any, List, Optional
+from peripherals.catalog.device_catalog import DeviceCatalog
 from src.config.app_config import AppConfig
 from common.logger import Logger
 
@@ -14,58 +8,52 @@ logger = Logger.get_instance()
 class DeviceSetup:
 
     @staticmethod
-    def initialize() -> PeripheralRegistry:
-
+    def initialize() -> DeviceCatalog:
         config = AppConfig.Load()        
-        registry = PeripheralRegistry()
+
+        sensors_config: Optional[List[Any]] = []
+        actuators_config: Optional[List[Any]] = []
+        communications_config: Optional[List[Any]] = []
 
         if config.CommunicationModules is not None:
 
             if config.CommunicationModules.I2CExpanders is not None:
                 for expander in config.CommunicationModules.I2CExpanders:
-                    expander_device = I2CExpanderDriver(expander, config.Simulator)
-                    registry.register_communication_module(expander_device)
-                    logger.info(f'Registered device: {expander_device.get_description()}')
+                    communications_config.append(expander)                    
 
             if config.CommunicationModules.AnalogDigitalConverters is not None:
                 for adc in config.CommunicationModules.AnalogDigitalConverters:
-                    adc_device = ADCDriver(adc, config.Simulator)
-                    registry.register_communication_module(adc_device)
-                    logger.info(f'Registered device: {adc_device.get_description()}')
+                    communications_config.append(adc)
 
         if config.Actuators is not None:
             if config.Actuators.RelaySwitches is not None:
                 for relay in config.Actuators.RelaySwitches:
-                    relay_device = RelayFactory.create(relay, config.Simulator)
-                    registry.register_actuator(relay_device)
-                    logger.info(f'Registered device: {relay_device.get_description()}')
+                    actuators_config.append(relay)
 
         if config.Sensors is not None:
 
             if config.Sensors.TDSSensors is not None:        
                 for sensor_config in config.Sensors.TDSSensors:
-                    sensor = TDSFactory.create(sensor_config, config.Simulator)
-                    registry.register_sensor(sensor)
-                    logger.info(f'Registered device: {sensor.get_description()}')
+                    sensors_config.append(sensor_config)
 
             if config.Sensors.TemperatureSwitches is not None:        
                 for sensor_config in config.Sensors.TemperatureSwitches:
-                    sensor = TempSwitchFactory.create(sensor_config, config.Simulator)
-                    registry.register_sensor(sensor)
-                    logger.info(f'Registered device: {sensor.get_description()}')
+                    sensors_config.append(sensor_config)
 
             if config.Sensors.DigitalTemperatureSensors is not None:        
                 for sensor_config in config.Sensors.DigitalTemperatureSensors:
-                    sensor = DigitalTempFactory.create(sensor_config, config.Simulator)                   
-                    registry.register_sensor(sensor)
-                    logger.info(f'Registered device: {sensor.get_description()}')
+                    sensors_config.append(sensor_config)
 
             if config.Sensors.I2CComboSensors is not None:        
                 for sensor_config in config.Sensors.I2CComboSensors:
-                    sensor = DigitalComboFactory.create(sensor_config, config.Simulator)                   
-                    registry.register_sensor(sensor)
-                    logger.info(f'Registered device: {sensor.get_description()}')      
+                    sensors_config.append(sensor_config)    
 
-        return registry
+
+        catalog = DeviceCatalog(is_simulated=config.Simulator, 
+            sensors_config=sensors_config,
+            actuators_config=actuators_config,
+            communications_config=communications_config) 
+
+        return catalog
 
 
