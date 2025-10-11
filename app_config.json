@@ -15,9 +15,9 @@
                 "driver": null,                
                 "measurement": "Celsius",
                 "i2c_address": "0x76",
-                "multiplexer": {
+                "multiplexer_details": {
                     "name": "I2C Extender",
-                    "channel": 0
+                    "channel": 1
                 }
             }
         ],
@@ -51,20 +51,16 @@
         [
             {
                 "name": "ADC for TDS",
-                "driver": "ads1115",
-                "spi_bus": 0,
-                "spi_device": 0,
-                "channel": 0
+                "gpio_pin": 18
             }
         ],
-        "I2CExpanders": 
+        "I2CMultiplexers": 
         [
             {
-                "name": "I2C for LCD",
-                "driver": "i2c_1602",
-                "i2c_bus": 1,
-                "i2c_address": 39
+                "name": "I2C Extender",
+                "multiplexer_address": "0x76",
+                "number_of_channels": 8
             }
         ]
     }
-}
+}    

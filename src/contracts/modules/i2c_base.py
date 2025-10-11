@@ -6,4 +6,4 @@ from src.contracts.modules.i2c_multiplexer_reference_config import I2CMultiplexe
 
 class I2CBase(BaseModel):
     i2c_address: I2CAddress = I2CAddress.Unknown
-    multiplexer: Optional[I2CMultiplexerReferenceConfig] = None
+    multiplexer_details: Optional[I2CMultiplexerReferenceConfig] = None

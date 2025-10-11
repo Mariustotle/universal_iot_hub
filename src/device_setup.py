@@ -17,8 +17,8 @@ class DeviceSetup:
 
         if config.CommunicationModules is not None:
 
-            if config.CommunicationModules.I2CExpanders is not None:
-                for expander in config.CommunicationModules.I2CExpanders:
+            if config.CommunicationModules.I2CMultiplexers is not None:
+                for expander in config.CommunicationModules.I2CMultiplexers:
                     communications_config.append(expander)                    
 
             if config.CommunicationModules.AnalogDigitalConverters is not None:

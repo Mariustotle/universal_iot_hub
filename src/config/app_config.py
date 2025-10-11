@@ -1,7 +1,6 @@
 
 from pydantic import BaseModel
 from typing import Optional
-from common.config_reader import ConfigReader
 from common.contracts.logging import Logging
 from src.contracts.actuators_config import ActuatorsConfig
 from src.contracts.communications_config import CommunicationsConfig
