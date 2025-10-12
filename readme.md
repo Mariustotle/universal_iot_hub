@@ -25,7 +25,7 @@ A modular, extensible IoT Hub built in Python for enthusiasts and developers to 
 ### Shared Peripheral Catalog
 There is a referenced catelog of peripherals and their drivers that can be used across your IoT projects.
 
-- [Index of available Peripherals](https://github.com/Mariustotle/iot_peripherals/blob/main/peripheral_index.md) - Naviage the available peripheral types
+- [Index of available Peripherals](/peripherals/peripheral_index.md) - Naviage the available peripheral types
 - [Portable submodule](https://github.com/Mariustotle/iot_peripherals) - Easy to use the underlying peripheral catalog in other projects, the underlying framework is in a diffferent repository than the example application.
 
 ### Configuration first approach
