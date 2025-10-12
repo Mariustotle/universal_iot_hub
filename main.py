@@ -3,7 +3,7 @@ import asyncio
 from common.logger import Logger
 from peripherals.catalog.device_catalog import DeviceCatalog
 from peripherals.contracts.configuration_summary import ConfigurationSummary
-from splash_screen import SplashScreen
+from src.splash_screen import SplashScreen
 from src.device_setup import DeviceSetup
 from src.user_interface import UserInterface
 from common.environment import Env
