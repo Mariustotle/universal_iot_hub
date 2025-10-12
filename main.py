@@ -29,7 +29,7 @@ def load_configuration() -> 'DeviceCatalog':
     summary = catalog.get_device_configuration_summary()
     print('Configuration Loaded.')
     
-    SplashScreen.display_configuration_summary(summary, 10)
+    SplashScreen.display_configuration_summary(summary, 5)
     
 
     return catalog
