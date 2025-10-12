@@ -48,13 +48,6 @@
         ]
     },
     "CommunicationModules": {
-        "AnalogDigitalConverters": 
-        [
-            {
-                "name": "ADC for TDS",
-                "gpio_pin": 18
-            }
-        ],
         "I2CMultiplexers": 
         [
             {

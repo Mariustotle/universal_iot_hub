@@ -84,7 +84,8 @@ class UserInterface:
                 print("Invalid selection. Try again.")
             
         Env.print("Exiting...")
-        Env.print()
+        time.sleep(3)
+        Env.clear_screan()
 
 
     def _prompt_for_params(self, params: list[ActionParam]) -> dict[str, Any]:
@@ -242,9 +243,6 @@ class UserInterface:
         except Exception as ex:
             Env.print(f"Error monitoring sensor [{sensor.name}] reading [{reading_option.label}]. Details: {ex}")
             input("Press Enter to continue...")
-
-
-
 
     async def actuator_selection_menu(self):
         while not self.completed:
