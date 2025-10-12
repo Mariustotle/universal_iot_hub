@@ -1,5 +1,5 @@
 import time
-from typing import Any, Optional
+from typing import List, Any, Optional
 from common.environment import Env
 from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
@@ -11,23 +11,67 @@ from peripherals.sensors.sensor import Sensor
 class UserInterface:
     completed:bool = False
     catalog:DeviceCatalog = None
+    fixed_width:int = 120
 
     def __init__(self, catalog: DeviceCatalog):
         self.catalog = catalog
 
+    def truncate(self, text: str, width: int) -> str:
+        return text if len(text) <= width else text[:width - 3] + "..."
+    
+    def section_top(self, title: str, width: int = fixed_width, color: Optional[str] = None):
+            Env.print(f"\n╔═ ", keep_same_line=True) 
+            Env.print(f"{title.upper()} ", keep_same_line=True, color=color)
+            Env.print(f'═' * (width - len(title) - 4))
+
+    def section_bottom(self, width: int = fixed_width):
+            Env.print(f"╚" + '═' * (width - 2) + "╝")
+
+    def show_menu(self, title: str, intro:Optional[str] = None, options:List[str] = None, allow_back:bool = False, color: Optional[str] = None):
+        Env.clear_screan()
+        self.section_top(title, self.fixed_width, color)
+        Env.print('║')
+
+        if intro:            
+            Env.print(f'║ {intro}')        
+
+        if options:
+            for opt in options:
+                Env.print(f'║ {self.truncate(opt, self.fixed_width - 4)}')
+
+        Env.print('║')
+        if allow_back:
+            Env.print("║ ", keep_same_line=True)
+            Env.print("B - Back to Previous Menu", color=color)
+        Env.print("║ ", keep_same_line=True)
+        Env.print("X - Exit", color=color)
+
+        self.section_bottom(self.fixed_width)
+        choice = input("What do you want to do? ").strip() 
+        return choice
+    
+    def show_result(self, title: str, intro:Optional[str] = None, content:List[str] = None, exit_message:Optional[str] = None, color: Optional[str] = None):
+        Env.clear_screan()
+        self.section_top(title, self.fixed_width, color)
+        Env.print('║')
+
+        if intro:            
+            Env.print(f'║ {intro}')        
+
+        if content:
+            for msg in content:
+                Env.print(f'║ {self.truncate(msg, self.fixed_width - 4)}')
+
+        Env.print('║')
+        self.section_bottom(self.fixed_width)
+
+        if exit_message:
+            Env.print(exit_message, color=color)
+
     async def main_menu(self):
-        while not self.completed:
-            Env.clear_screan()
-            Env.print_paragraph(
-                "\n<<<<<<<<< Main Menu >>>>>>>>>",
-                "",
-                "1 - Read sensor (Get sensor reading)",
-                "2 - Use actuator (Action something)",
-                "-------------------------------",
-                "X - Exit",
-                ''
-            )
-            choice = input("Select an option: ").strip()            
+        while not self.completed:            
+            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)"]
+            choice = self.show_menu(title="Main Menu", options=option_list, color="cyan")
 
             if choice == "1":
                 await self.sensor_selection_menu()
@@ -75,20 +119,10 @@ class UserInterface:
 
     async def sensor_selection_menu(self):
         while not self.completed:
-
-            Env.clear_screan()
-            Env.print_paragraph("<<<<<<<<< Read Sensors >>>>>>>>>","")
+            option_list = []
             for i, sensor in enumerate(self.catalog.sensors.all):
-                print(f"{i + 1}. {sensor.name} [{sensor.sensor_type.name}]")
-            
-            Env.print_paragraph(
-                "-------------------------------",
-                "B - Back to Main Menu",
-                'X - Exit Application',
-                ''
-            )
-
-            choice = input("Select an option: ").strip() 
+                option_list.append(f"{i + 1}. {sensor.name} [{sensor.sensor_type.name}]")
+            choice = self.show_menu(title="Select Sensor", allow_back=True, options=option_list, color="cyan")
             
             if choice.lower() == 'x':
                 self.completed = True      
@@ -133,20 +167,11 @@ class UserInterface:
 
         while not self.completed:
 
-            Env.clear_screan()
-            Env.print_paragraph(f"<<<<<<<<< {sensor.name} Reading Options >>>>>>>>>", sensor, "")
-
+            option_list = []
             for i, action in enumerate(sensor.reading_options):
-                print(f"{i + 1} - {action.label} ({action.description})")
+                option_list.append(f"{i + 1} - {action.label} ({action.description})")
             
-            Env.print_paragraph(
-                "-------------------------------",
-                "B - Back to Sensor Selection",
-                'X - Exit Application',
-                ''
-            )
-
-            choice = input("Select an option: ").strip() 
+            choice = self.show_menu(title=f"{sensor.name} - Reading Options", allow_back=True, options=option_list, color="cyan")
             
             if choice.lower() == 'x':
                 sensor.cleanup()
@@ -204,15 +229,13 @@ class UserInterface:
                 result = reading_option.func(**args) if args else reading_option.func()
                 readable_response = result.__str__() if hasattr(result, "__str__") else str(result)
 
-                Env.clear_screan()
-                Env.print_paragraph(
-                    f"<<<<<<<<< Monitoring {sensor.name} >>>>>>>>>",
-                    sensor,
-                    f"Refresh Counter: {counter}",
-                    "",
-                    f"Result: {readable_response}", "", 
-                    "<<<<< Press any key to stop monitoring >>>>>", ""
-                )
+                option_list = []
+                option_list.append(str(sensor))
+                option_list.append(f"Refresh Counter: {counter}")
+                option_list.append("")
+                option_list.append(f"Result: {readable_response}")
+                
+                self.show_result(title=f"Monitoring {sensor.name}", exit_message="Press any key to stop monitoring...", content=option_list, color="cyan")
 
             Env.monitor_until_keypress(read_callback, interval_seconds)
 
@@ -226,20 +249,11 @@ class UserInterface:
     async def actuator_selection_menu(self):
         while not self.completed:
 
-            Env.clear_screan()
-            Env.print_paragraph("<<<<<<<<< Actuator Selection >>>>>>>>>","")
+            option_list = []
             for i, actuator in enumerate(self.catalog.actuators.all):
-                print(f"{i + 1}. {actuator.name} [{actuator.actuator_type.name}]")
-            
-            Env.print_paragraph(
-                "-------------------------------",
-                "B - Back to Main Menu",
-                'X - Exit Application',
-                ''
-            )
-
-            choice = input("Select an option: ").strip() 
-            
+                option_list.append(f"{i + 1}. {actuator.name} [{actuator.actuator_type.name}]")
+            choice = self.show_menu(title="Select Actuator", allow_back=True, options=option_list, color="cyan")
+                     
             if choice.lower() == 'x':
                 self.completed = True      
                 break      
@@ -272,20 +286,11 @@ class UserInterface:
     async def actuator_action_menu(self, actuator:Actuator):
         while not self.completed:
 
-            Env.clear_screan()
-            Env.print_paragraph(f"<<<<<<<<< {actuator.name} Available Actions >>>>>>>>>", actuator, "")
-
+            option_list = []
             for i, action in enumerate(actuator.actions):
-                print(f"{i + 1} - {action.label} ({action.description})")
+                option_list.append(f"{i + 1} - {action.label} ({action.description})")
             
-            Env.print_paragraph(
-                "-------------------------------",
-                "B - Back to Actuator Selection",
-                'X - Exit Application',
-                ''
-            )
-
-            choice = input("Select an option: ").strip() 
+            choice = self.show_menu(title=f"{actuator.name} - Available Actions", allow_back=True, options=option_list, color="cyan")
             
             if choice.lower() == 'x':
                 actuator.cleanup()
@@ -317,17 +322,20 @@ class UserInterface:
                     # Prompt for parameters (if any)
                     args = self._prompt_for_params(action.params)
 
-                    Env.print()
-                    Env.print(f"Executing: {action.label}")
+
                     # action.func is already a bound method; call with kwargs
                     result = action.func(**args) if args else action.func()
 
                     if (result != None):
-                        Env.print(f"Result: {result}")
-                    
-                    Env.print_paragraph("", "New Status:", actuator)
-                    
-                    Env.print()
+                        option_list = []
+                        option_list.append(f"Executed: {action.label}")
+                        option_list.append(f"Result: {result}")
+                        option_list.append("")
+                        option_list.append("New Actuator Status:")
+                        option_list.append(str(actuator))
+                       
+                        self.show_result(title=f"{actuator.name} action [{action.label}] outcome", content=option_list, color="cyan")
+
                     input("Press Enter to continue...")
 
                 except (ValueError, IndexError):

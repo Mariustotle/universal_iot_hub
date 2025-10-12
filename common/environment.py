@@ -77,13 +77,28 @@ class Env:
         return f"\033[{color_code}m{text}\033[0m"
     
     @staticmethod
-    def print(message: Optional[str] = None, color: Optional[str] = None):
-        if message is not None:
-            print(Env.color_wrap(message, color))
-        else:
+    def print(
+        message: Optional[str] = None,
+        color: Optional[str] = None,
+        keep_same_line: bool = False,
+        flush: bool = True,
+    ) -> None:
+        """
+        Prints a message with optional color.
+        If keep_same_line=True, it does not end the line (useful for progress/status updates).
+        """
+        if message is None:
+            # Default empty line
             print()
+            return
+
+        formatted = Env.color_wrap(str(message), color)
+        end = "" if keep_same_line else "\n"
+        print(formatted, end=end, flush=flush)
 
     @staticmethod
     def print_paragraph(*items: Any, color: Optional[str] = None) -> None:
         for item in items:
             Env.print(str(item), color=color)
+
+  

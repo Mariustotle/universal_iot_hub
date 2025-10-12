@@ -1,225 +1,128 @@
 # 🌐 Universal IoT Hub
 
-A modular, extensible IoT Hub built in Python for enthusiasts and developers to **prototype, test, and manage** various IoT peripherals. This project serves as a central hub, making it easy to:
+A modular, extensible IoT Hub built in Python for enthusiasts and developers to **prototype, test, and manage** various IoT peripherals.
 
-- Connect and test sensors, actuators, and communication modules.
-- Interact via a simple console interface to test and simulate devices
-- Extend new devices with custom drivers and shared contracts.
+## 📦 Resources
 
----
+- [Project Home](https://github.com/Mariustotle/universal_iot_hub)
+- 🚀[Setup and configure project](/docs/setup.md)
+- 🔗 [Quick Refenerces](/docs/quick_references.md)
+- [Debugging & Troubleshooting](/docs/debugging.md)
 
-## 📦 Project Overview
 
-This project is structured into:
+## 📦 Overview
 
-### Repositories
-- **Core IoT Hub**: Main runtime logic and thread orchestration.
-- **Peripheral Submodule**: Reusable device definitions (sensors, actuators, communication modules).
-🔗 [Peripheral Submodule on GitHub »](https://github.com/Mariustotle/universal_iot_hub)
+- A shared peripheral catalog
+  - Categorized by Sensors, Actuators, Display and communication modules
+  - Driver extention, you can easily add more drivers to existing peripherals
+- Use configuration to load dynamically from a shared catalog of peripherals
+  - Can configure one or more instances of each type
+  - Validate PIN and Module Dependancies at runtime
+- Easily test and interact with sensors
+  - Each peripheral have a simular mode so explore without peripherals
+  - Interactive menu that dynamically shows available peripherals and interaction options
 
-### Supported Peripherals
-The IoT platforms is configuration based, so you just need to configure the peripherals you want and it will load them up in the menu.  You can browse the available [peripherals here](https://github.com/Mariustotle/iot_peripherals/blob/main/peripheral_index.md).
+### Shared Peripheral Catalog
+There is a referenced catelog of peripherals and their drivers that can be used across your IoT projects.
 
----
+- [Index of available Peripherals](https://github.com/Mariustotle/iot_peripherals/blob/main/peripheral_index.md) - Naviage the available peripheral types
+- [Portable submodule](https://github.com/Mariustotle/iot_peripherals) - Easy to use the underlying peripheral catalog in other projects, the underlying framework is in a diffferent repository than the example application.
 
-## 🚀 Getting Started
+### Configuration first approach
 
-### 1. Install Required Software
 
-Make sure the following tools are installed on your system:
+- **Simulator mode** - Use actual drivers and periphers or simulate them for testing
+- **The type of device** e.g. Raspberry pi 3 which informs further validation and configuration options
+- **Peripheral configurations** - What peripherals are attached?
+  - **Sensors** - Peripherals that read values
+  - **Actuators** - Peripherals that can cause change through actions
+  - **Hybrid Peripherals** - Typically something that reads and then takes action if value is >, < or =
+  - **Display modules** - Screens to show status and options
+  - **Communication Modules** - Typically I2C Multiplexers or ADC Modules
+    - **Connections** -These are dinamically created at runtime from references in other peripherals
 
-- [VS Code](https://code.visualstudio.com/)
-- [Git for Windows](https://git-scm.com/) (Terminal Git)
-- [Fork Git Client](https://fork.dev/) (GUI Git)
-- [PuTTyGEN]() (SSH Key Generator)
-- Install Python (PowerShell in administrator Mode)
-  ```powershell
-    # Create new Alias Profile (Persist alias with reboot)
-    New-Item -Path $PROFILE.AllUsersAllHosts -Type File -Force
-    $PROFILE | Select-Object -Property AllUsersAllHosts
-
-    # Install the specific Python version
-    choco install python --version=3.12.5 -y --force
-
-    # Set a PowerShell Alias for this version on the Global Profile
-    Add-Content -Path $PROFILE.AllUsersAllHosts -Value 'Set-Alias -Name python312 -Value "C:\Python312\python.exe"'
-    . $PROFILE.AllUsersAllHosts
-    python312 --version
-
-    #  Update PIP
-    python312 -m pip install --upgrade pip
-
-    # Install virtual environment package
-    python312 -m pip install virtualenv    
-
-  ```
-
----
-
-### 2. Clone the Repository
-
-```powershell
-git clone https://github.com/Mariustotle/universal_iot_hub.git
-cd universal_iot_hub
-git submodule update --init --recursive
-```
-
-### 3. Setup the Project on your main windows devlopment environment
-
-1. Install VS Code Extentions
-   - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-   - [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
-   - [Remote Development extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
-  
-2.  Setup IoT Project
-    1.  Create local virtual environment and activate it
-        ```powershell
-        python -m pip install --upgrade pip
-
-        python312 -m virtualenv local_env
-        ./local_env/Scripts/activate
-        ```
-    2.  Install packages
-        ```powershell 
-        pip install -r requirements.txt
-        ```
-    3.  Setup launch file
-        ```json
-        {
-            "version": "0.2.0",
-            "configurations": [
-                {
-                "name": "Run main.py",
-                "type": "python",
-                "request": "launch",
-                "program": "${workspaceFolder}/main.py",
-                "console": "integratedTerminal"
-                }
-            ]
-        }
-        ```
-   
-3.  Run the solution and interact with the menu in the console
-    - In the config (app_config.json) switch on the simulator
-        ```json
+```json
+{
+    "Simulator": true,
+    "Device": "Raspberry Pi 3",
+    "Sensors" : {
+        "I2CComboSensors" :
+        [
             {
-                "Simulator": true,
-                ...
+                "name": "Workshop ENV Sensor",
+                "driver": null,                
+                "measurement": "Celsius",
+                "i2c_address": "0x76",
+                "multiplexer_details": {
+                    "name": "I2C Extender",
+                    "channel": 1
+                }
             }
-        ```
-    - Run "main.py"
-    - Follow the console menu and see how it works
-  
-4. *Setup the remote connection
-   1. Check that you have connectivity
-        ```PowerShell
-        # Test Connectivity
-        telnet x.x.x.x 22
-
-        # Connect to SSH Server
-        ssh user@x.x.x.x -A
-        ```
-
-   2. Add new SSH Host (Xntr+Shift+P) >> "Remote-SSH: Add New Host" 
-   3. Add the static IP address of your Pi
-        ```
-        ssh pi@<raspberrypi-ip-address> -A
-        ```
-        *Note: Default user = pi, password = raspberry which you have hopefully changed.*
-   4. This will now install the VS Code Server on the remote device
-   
-        *You can get a more comprehensive guide from the source [Official Guide](https://code.visualstudio.com/docs/remote/ssh)*
-        
-   
-5. Make the connection seamless
-   You will get prompted for the password until you setup a key exchange.
-
-   + Generate a SSH Key from PuttyGen (SSH-2 RSA Key)
-     + Save the FULL key (Putty format) as **id_rsa_full.ppk**
-     + Copy public key into a **id_rsa.pub** file
-
-        ![](https://raw.githubusercontent.com/mariusvrstr/hydriot/main/Raspberry%20Pi/_resources/PuTTyGen_publicKey.png)
-
-     + Save the private key (In Open SSH format) as **id_rsa** file
-
-        ![](https://raw.githubusercontent.com/mariusvrstr/hydriot/main/Raspberry%20Pi/_resources/PuTTyGen_privateKey.png)  
-    
-     + Copy the above 2 files to C:\Users\{username}\.ssh\pi\ (Laptop)
-
-        ![](https://raw.githubusercontent.com/mariusvrstr/hydriot/main/Raspberry%20Pi/_resources/sshKeys.png)  
-   
-    + Open SSH connection to PI e.g. `ssh {user}@{address}`
-    + Create SSH Folder on the Pi (Will complain if already exist) `$ sudo mkdir ~/.ssh`
-    + Edit the SSH Authorization file `$ sudo nano ~/.ssh/authorized_keys`
-      Copy paste from **id_rsa.pub** (Public Key) file >> Cntr+O (Save) Cntr+X (Exit)
-    + Set the required file protection
-    
-        ```bash
-        # Fix ownership (make sure pi owns its own .ssh folder)
-        sudo chown -R pi:pi /home/pi/.ssh
-
-        # Fix folder permissions
-        chmod 700 /home/pi/.ssh
-        chmod 700 ~/.ssh
-
-        # Fix file permissions (if they exist)
-        chmod 600 /home/pi/.ssh/authorized_keys
-        chmod 600 ~/.ssh/authorized_keys
-        
-        # View SSH auth options
-        grep -i auth /etc/ssh/sshd_config
-     
-        ```
-      
-   + Configure the SSH Connection
-       + Open the config file (Global SSH config file) in VS Code (Settings cog in remote window)
-       + Add the IdentityFile reference pointing to the id_rsa file (Private Key)
-       
-       ![](https://raw.githubusercontent.com/mariusvrstr/hydriot/main/Raspberry%20Pi/_resources/sshConfigurationFile.png)    
-       + Save and restart VS Code (Desktop)
-   + Reconnect to remote VS Code environment (Should NOT prompt for pass)
-
-
-## IoT Specific Setup
-- [Raspbery Pi 3/4/5](device_setup/raspberry_pi_3_4_5.md)
-- [Raspberri Pi Pico](device_setup/raspberry_pi_pico.md)
-
-
-## Quick References
-
-### VS Code
-- Cntr+Shift+P = Select Interpreter
-- Cntr+K then v = View Markdown
-
-### Python
-- pip freeze > requirements.txt
-
-
-### Linux Run from Bash
-
-```bash
-
-# View git status
-git status
-
-# Revert specific local changes
-git restore filename
-
-# Edit config (Remove simulator mode)
-sudo nano app_config.json
-
-# Navigate to project folder
-cd projects/universal_iot_hub/
-
-# Update to latest code
-git fetch
-git pull --recurse-submodules
-
-# Activate local python
-source local_env/bin/activate
-
-# Start application
-python main.py
+        ],
+        "TDSSensors" : 
+        [
+            {
+                "name": "Fish Tank TDS Sensor",
+                "analog_digital_converter_name": "ADC (TDS)",
+                "adc_channel": 1,
+                "number_of_readings": 2,
+                "delay_between_readings": 0.1,
+                "driver": null               
+            }
+        ]
+    },
+    "Actuators" : {
+        "RelaySwitches" : 
+        [
+            {
+                "name": "Bedroom Light",
+                "driver": "jqc3f_05vdc_c",
+                "default_power_status": "Off",
+                "gpio_pin": 12,
+                "is_low_voltage_trigger": true,
+                "use_direction_control": true
+            }
+        ]
+    },
+    "CommunicationModules": {
+        "AnalogDigitalConverters": 
+        [
+            {
+                "name": "ADC for TDS",
+                "gpio_pin": 18
+            }
+        ],
+        "I2CMultiplexers": 
+        [
+            {
+                "name": "I2C Extender",
+                "multiplexer_address": "0x76",
+                "number_of_channels": 8
+            }
+        ]
+    }
+}
 ```
+
+The IoT Hub includes a splash screen to show the peripherals and warnings based on your configuration.
+![Splash Screen](https://raw.githubusercontent.com/Mariustotle/universal_iot_hub/refs/heads/main/resources/splash_screen.png)
+
+**Highlights**
+- Pin configuration might just look like an int but it can be extended to include GPIO/BOARD and labels
+- Depending on the device type you might have onboard analog pins and I2C connections, the configurations allow you to specify either onboard or do it through ADC Converters or I2C Multiplexer modules
+
+### Explore and interact
+The main IoT Hub is an interactive console application, it does not have a specific business purpose other than the exploration and simulation of peripherals. The idea is that when you have a project idea you prototype the periphers here and then spin up a business specific version referencing the common Peripheral Catalog transfering your learnings.
+
+![Interactive menu](https://raw.githubusercontent.com/Mariustotle/universal_iot_hub/refs/heads/main/resources/interactive_console_menu.png)
+
+
+
+
+
+
+
+
+
 
 
