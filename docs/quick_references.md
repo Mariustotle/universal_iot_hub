@@ -20,6 +20,10 @@ git status
 # Revert specific local changes
 git restore filename
 
+# Revert all local changes
+git restore .
+git clean -fd
+
 # Update to latest code
 git fetch
 git pull --recurse-submodules
