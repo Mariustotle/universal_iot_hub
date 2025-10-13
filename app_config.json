@@ -9,17 +9,13 @@
         "max_number_of_files": 14
     },
     "Sensors" : {
-        "I2CComboSensors" :
+        "DigitalTemperatureSensors" :
         [
             {
-                "name": "Workshop ENV Sensor",
-                "driver": null,                
-                "measurement": "Celsius",
-                "i2c_address": "0x76",
-                "multiplexer_details": {
-                    "name": "I2C Extender",
-                    "channel": 1
-                }
+                "name": "Server Room Temperature",
+                "driver": "dht22",
+                "gpio_pin": 12,
+                "measurement": "Celsius"
             }
         ],
         "TDSSensors" : 
@@ -41,19 +37,9 @@
                 "name": "Bedroom Light",
                 "driver": "jqc3f_05vdc_c",
                 "default_power_status": "Off",
-                "gpio_pin": 12,
+                "gpio_pin": 18,
                 "is_low_voltage_trigger": true,
                 "use_direction_control": true
-            }
-        ]
-    },
-    "CommunicationModules": {
-        "I2CMultiplexers": 
-        [
-            {
-                "name": "I2C Extender",
-                "multiplexer_address": "0x76",
-                "number_of_channels": 8
             }
         ]
     }
