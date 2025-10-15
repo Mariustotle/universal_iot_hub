@@ -5,6 +5,7 @@ from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
 from peripherals.catalog.device_catalog import DeviceCatalog
 from peripherals.contracts.on_off_status import OnOffStatus
+from peripherals.devices.factory import DeviceDiagnosticFactory
 from peripherals.sensors.read_decorator import ReadAction
 from peripherals.sensors.sensor import Sensor
 
@@ -70,13 +71,15 @@ class UserInterface:
 
     async def main_menu(self):
         while not self.completed:            
-            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)"]
+            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)", "3 - Device Diagnostics"]
             choice = self.show_menu(title="Main Menu", options=option_list, color="cyan")
 
             if choice == "1":
                 await self.sensor_selection_menu()
             elif choice == "2":
                 await self.actuator_selection_menu()
+            elif choice == "3":
+                await self.device_diagnostics_menu()
             elif choice.lower() == "x":
                 self.completed = True
                 break
@@ -86,6 +89,25 @@ class UserInterface:
         Env.print("Exiting...")
         time.sleep(3)
         Env.clear_screan()
+
+
+    async def device_diagnostics_menu(self):
+
+        if self.catalog.device_type is None:
+            Env.print("No device diagnostics available in catalog.")
+            time.sleep(2)
+            return        
+
+        Env.clear_screan()
+        Env.print(f"Gathering diagnostics for {self.catalog.device_type.value}...")
+        time.sleep(1)
+
+        diagnostics = DeviceDiagnosticFactory.create_device(self.catalog.device_type, self.catalog.simulated)
+        diagnostics.health_overview()
+
+        Env.print("Press any key to continue")
+        input()
+
 
 
     def _prompt_for_params(self, params: list[ActionParam]) -> dict[str, Any]:
