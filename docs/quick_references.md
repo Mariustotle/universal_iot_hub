@@ -33,7 +33,7 @@ git -m commit 'your-message-here'
 git push
 ```
 
-### Project common actions
+### Bash common actions
 
 ```bash
 # Navigate to project folder
@@ -42,14 +42,23 @@ cd projects/universal_iot_hub/
 # Activate local python
 source local_env/bin/activate
 
-# Start application
-python main.py
+
 
 # Edit config (Remove simulator mode)
 sudo nano app_config.json
 
 # Save latest packages added
 pip freeze > requirements.txt
+```
+
+
+### Python
+
+```python
+# Start application
+python main.py
+
+#Cntr+Shift+D = Exit python in console
 ```
 
 ### Visual Studio Code
