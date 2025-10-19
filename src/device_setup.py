@@ -1,15 +1,15 @@
 from typing import Any, List, Optional
 from peripherals.catalog.device_catalog import DeviceCatalog
-from src.config.app_config import AppConfig
+
 from common.logger import Logger
+from src.config.app_config import AppConfig
 
 logger = Logger.get_instance()
 
 class DeviceSetup:
 
     @staticmethod
-    def initialize() -> DeviceCatalog:
-        config = AppConfig.Load()        
+    def initialize(config:AppConfig) -> DeviceCatalog:
 
         sensors_config: Optional[List[Any]] = []
         actuators_config: Optional[List[Any]] = []
@@ -51,6 +51,7 @@ class DeviceSetup:
 
         catalog = DeviceCatalog(is_simulated=config.Simulator, 
             device_type=config.Device,
+            adapter_type=config.Adapter,
             sensors_config=sensors_config,
             actuators_config=actuators_config,
             communications_config=communications_config) 

@@ -1,6 +1,7 @@
 {
     "Simulator": true,
     "Device": "Raspberry Pi 3",
+    "Adapter": "RaspberryOSTrixy",
     "logging": {
         "file_name": "app.log",
         "path": "logs//",

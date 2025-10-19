@@ -5,17 +5,20 @@ from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
 from peripherals.catalog.device_catalog import DeviceCatalog
 from peripherals.contracts.on_off_status import OnOffStatus
-from peripherals.devices.factory import DeviceDiagnosticFactory
+from peripherals.devices.device_base import DeviceBase
+from peripherals.devices.factory import DeviceFactory
 from peripherals.sensors.read_decorator import ReadAction
 from peripherals.sensors.sensor import Sensor
 
 class UserInterface:
     completed:bool = False
     catalog:DeviceCatalog = None
+    device:DeviceBase = None
     fixed_width:int = 120
 
-    def __init__(self, catalog: DeviceCatalog):
+    def __init__(self, catalog: DeviceCatalog, device:DeviceBase):
         self.catalog = catalog
+        self.device = device
 
     def truncate(self, text: str, width: int) -> str:
         return text if len(text) <= width else text[:width - 3] + "..."
@@ -102,8 +105,8 @@ class UserInterface:
         Env.print(f"Gathering diagnostics for {self.catalog.device_type.value}...")
         time.sleep(1)
 
-        diagnostics = DeviceDiagnosticFactory.create_device(self.catalog.device_type, self.catalog.simulated)
-        diagnostics.health_overview()
+        # diagnostics = DeviceFactory.create_device(self.catalog.device_type, self.catalog.adapter_type, self.catalog.simulated)
+        # diagnostics.health_overview()
 
         Env.print("Press any key to continue")
         input()
