@@ -2,21 +2,23 @@
 
 The Raspberry Pi 3/4/5 is a **Single Board Computer (SBC)**. Despite its small size, it functions like a regular computer — it has storage (via SD card), RAM, HDMI output, and USB ports for peripherals. It runs a full operating system, often Raspberry Pi OS (Linux-based), making it ideal for IoT prototyping.
 
----
 
-## 🔧 Implementation Approach
+## Configuration
 
-While development can be done **directly on the Pi**, it's more efficient to use your **laptop or desktop** and connect to the Pi remotely via SSH or VS Code. This approach:
+1. Setup your OS
+   1. Format and install OS on SD
+   2. Configure the device
+   3. Setup OS Specific Pi
+      - Raspberry Pi 3
+      - Raspberry Pi 4
+      - Raspberry Pi 5
+  
+2. Configure the Project
+   1. Configure Git
+   2. Configure Python
 
-- Keeps your Pi uncluttered
-- Improves responsiveness
-- Makes it easier to migrate to **headless** or **microcontroller-based** devices later (like the Pi Pico or ESP32)
 
----
-
-# 🚀 Device Setup
-
-## 1. Install the Operating System
+## 1.1 Install the Operating System
 
 1. Download and install the [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
 2. Insert your SD card into your computer.
@@ -33,51 +35,22 @@ While development can be done **directly on the Pi**, it's more efficient to use
 6. Power on the device and wait for it to boot.
 
 
-### Configure SSH on Raspberry Pi
+## 1.2 Configure Device
 
-- Setup SSH (If it was not done on the installer settings)
-  
-    ```bash
-    sudo systemctl enable ssh
-    sudo systemctl start ssh
-
-    # View status
-    sudo systemctl status ssh
-    ```
+![Control Centre](https://raw.githubusercontent.com/Mariustotle/universal_iot_hub/refs/heads/main/resources/os/raspberry_pi_console_centre.jpg)
 
 
-## 2. Configure Networking
+Setting                 | Description                                
+-------------           | ---------------
+SSH                     | Needed for remote terminal access
+SPI                     | Fast device communication bi-directional GPIO communication
+1-Wire                  | A very simple communication bus for low-speed sensors—typically temperature sensors like DS18B20
+Serial Port             | Provides a serial communication interface (TX/RX pins) for connecting to microcontrollers, GPS modules, or other serial devices
+Serial Console          | Lets you access the Raspberry Pi’s terminal (command line) through the UART serial pins.
 
-Once booted and connected to your Wi-Fi, you could also do this through your DHCP then you do not need to log into the device OS.
 
-```bash
-# View OS Version (the network file might vary)
-cat /etc/os-release
 
-# View current IP address
-hostname -I
 
-# Show WiFi connections
-nmcli connection show
-
-# (Optional) Set a static IP for stability
-sudo nano /etc/NetworkManager/system-connections/{connection_name}.nmconnection
-
-```
-
-```ini
-[ipv4]
-method=manual
-addresses=X.X.X.X/24
-gateway=X.X.X.X
-dns=8.8.8.8;
-```
-Nano commands: Cntr+O (Save) then Cntr+X (Exit)
-
-```bash
-sudo nmcli connection reload
-sudo nmcli connection up "{connection_name}"
-```
 
 ## 3. Configure via PowerShell
 
