@@ -23,7 +23,7 @@ def main():
     (catalog, device) = load_configuration()
 
     # Launch interactive menu in the main thread
-    asyncio.run(UserInterface(catalog, device).main_menu())
+    asyncio.run(UserInterface(catalog=catalog, device=device).main_menu())
     
 
 def load_configuration():
@@ -43,7 +43,7 @@ def load_configuration():
     
     SplashScreen.display_configuration_summary(summary, 5)
 
-    return (device, catalog)
+    return (catalog, device)
 
 if __name__ == "__main__":
     main()
