@@ -1,78 +1,13 @@
 import time
-from typing import Dict, List, Any, Optional
+from typing import List, Any, Optional
 from common.environment import Env
 from peripherals.actuators.action_decorator import ActionParam, coerce_input
 from peripherals.actuators.actuator import Actuator
 from peripherals.catalog.device_catalog import DeviceCatalog
-from peripherals.contracts.device_type import DeviceType
 from peripherals.contracts.on_off_status import OnOffStatus
-from peripherals.contracts.pins.gpio_pin_details import GpioPinDetails
-from peripherals.contracts.pins.pin_details import PinDetails
-from peripherals.contracts.pins.pin_position import PinPosition
-from peripherals.devices.device_base import DeviceBase
-from peripherals.devices.factory import DeviceFactory
 from peripherals.sensors.read_decorator import ReadAction
 from peripherals.sensors.sensor import Sensor
-
-
-class DisplayHelper:
-
-    @staticmethod
-    def print_pin_table(pins: Dict[PinPosition, Any], device_type:DeviceType):
-        Env.clear_screan()
-        Env.print_paragraph(
-             '-------------------------------------------------------------',
-            f'This is the pin layout for [{device_type.name}] device',
-             '------------------------------------------------------------',
-             'Turn the device so that the majority of the pins are at the bottom side of the board.',
-             '')
-
-        # Determine min/max range for both axes
-        all_h = [p.horizontal_position for p in pins.keys()]
-        all_v = [p.vertical_position for p in pins.keys()]
-        min_h, max_h = min(all_h), max(all_h)
-        min_v, max_v = min(all_v), max(all_v)
-
-        # Build a 2D matrix of cell values (as strings)
-        grid = {}
-        for v in range(min_v, max_v + 1):
-            grid[v] = []
-            for h in range(min_h, max_h + 1):
-                pin = next((pins[pos] for pos in pins if pos.horizontal_position == h and pos.vertical_position == v), None)
-                cell_value = getattr(pin, "label", str(pin)) if pin else "N/A"
-                grid[v].append(str(cell_value))
-
-        # Determine column widths dynamically
-        num_cols = max_h - min_h + 1
-        col_widths = []
-        for col_idx in range(num_cols):
-            col_cells = [grid[v][col_idx] for v in grid]  # values in this column
-            header_label = str(min_h + col_idx)
-            max_len = max(len(header_label), *(len(c) for c in col_cells))
-            col_widths.append(max_len + 2)  # padding for spacing
-
-        # Build header row
-        header_cells = [f"{(min_h + i):^{col_widths[i]}}" for i in range(num_cols)]
-        header = "     " + "".join(header_cells)
-        Env.print(header)
-        Env.print("   " + "-" * (len(header) - 3))
-
-        # Print each row
-        for v in range(min_v, max_v + 1):
-            row_cells = [
-                f"{grid[v][i]:^{col_widths[i]}}" for i in range(num_cols)
-            ]
-            Env.print(f"{v:<3} |" + "".join(row_cells))
-
-
-        Env.print_paragraph(
-            '',
-            '- Items with a * have a dual purpose, only showing the active purpose',
-            '- The [-GXX] is the GPIO pin address',
-            '',
-            ''
-        )
-
+from src.print_helper import DisplayHelper
 
 class UserInterface:
     completed:bool = False
@@ -94,7 +29,7 @@ class UserInterface:
     def section_bottom(self, width: int = fixed_width):
             Env.print(f"╚" + '═' * (width - 2) + "╝")
 
-    def show_menu(self, title: str, intro:Optional[str] = None, options:List[str] = None, allow_back:bool = False, color: Optional[str] = None):
+    def show_menu(self, title: str, intro:Optional[str] = None, options:List[str] = None, allow_back:bool = False, allow_show_pin:bool = False, color: Optional[str] = None):
         Env.clear_screan()
         self.section_top(title, self.fixed_width, color)
         Env.print('║')
@@ -107,6 +42,9 @@ class UserInterface:
                 Env.print(f'║ {self.truncate(opt, self.fixed_width - 4)}')
 
         Env.print('║')
+        if allow_show_pin:
+            Env.print("║ ", keep_same_line=True)
+            Env.print("I - Show Additional Info", color=color)
         if allow_back:
             Env.print("║ ", keep_same_line=True)
             Env.print("B - Back to Previous Menu", color=color)
@@ -134,18 +72,22 @@ class UserInterface:
 
         if exit_message:
             Env.print(exit_message, color=color)
+    
 
     async def main_menu(self):
         while not self.completed:            
-            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)", "3 - Device Details"]
-            choice = self.show_menu(title="Main Menu", options=option_list, color="cyan")
+            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)"]
+            choice = self.show_menu(title="Main Menu", options=option_list, allow_show_pin=True, color="cyan")
 
             if choice == "1":
                 await self.sensor_selection_menu()
             elif choice == "2":
                 await self.actuator_selection_menu()
-            elif choice == "3":
-                await self.device_details_menu()
+
+            elif choice.lower() == "i":
+                DisplayHelper.print_pin_table(self.catalog.device.device_pins, self.catalog.device.name)
+                input("Press Enter to continue...")
+
             elif choice.lower() == "x":
                 self.completed = True
                 break
@@ -155,59 +97,6 @@ class UserInterface:
         Env.print("Exiting...")
         time.sleep(3)
         Env.clear_screan()
-
-
-    async def display_device_info(self):
-        #TODO: Show the pins
-        #TODO: Map the configured pins
-
-        DisplayHelper.print_pin_table(self.catalog.device.device_pins, self.catalog.device.device_type)
-
-        input("Press Enter to continue...")
-
-
-    async def device_details_menu(self):
-
-        if self.catalog.device_type is None:
-            Env.print("No device details available...")
-            time.sleep(2)
-            return        
-
-
-        while not self.completed:
-            option_list = []
-            option_list.append(f"1. Display Device Info")
-            option_list.append(f"2. Run device diagnostics")
-      
-
-            choice = self.show_menu(title="Select device option", allow_back=True, options=option_list, color="cyan")
-            
-            if choice.lower() == 'x':
-                self.completed = True      
-                break      
-            
-            elif choice.lower() == 'b':
-                break
-            
-            else:
-                try:
-                    
-                    if choice.lower() == '1':
-                        await self.display_device_info()
-                    
-                    elif choice.lower() == '2':
-                        print('Do device diagnostics')
-
-                    else:
-                        raise Exception(f'{choice.lower()} is not a valid selection, please try again.')
-
-                except (ValueError, IndexError):
-                    Env.print("Invalid selection. Returning to main menu.")
-                    time.sleep(2)
-                    return
-
-
-
 
     def _prompt_for_params(self, params: list[ActionParam]) -> dict[str, Any]:
         if not params:
@@ -278,7 +167,7 @@ class UserInterface:
                 
     async def sensor_action_menu(self, sensor:Sensor):
 
-        # If only one reading option, skip menu and monitor
+        '''
         if (sensor.reading_options is None or len(sensor.reading_options) == 1):
             Env.clear_screan()
             Env.print(f"Only one reading option available. Starting monitoring of {sensor.name} every 3 seconds...")
@@ -286,6 +175,7 @@ class UserInterface:
 
             self.monitor_sensor(sensor, sensor.reading_options[0], 3)
             return
+        '''        
 
         while not self.completed:
 
@@ -293,9 +183,13 @@ class UserInterface:
             for i, action in enumerate(sensor.reading_options):
                 option_list.append(f"{i + 1} - {action.label} ({action.description})")
             
-            choice = self.show_menu(title=f"{sensor.name} - Reading Options", allow_back=True, options=option_list, color="cyan")
+            choice = self.show_menu(title=f"{sensor.name} - Reading Options", allow_back=True, allow_show_pin=True, options=option_list, color="cyan")
+
+            if choice.lower() == 'i':
+                DisplayHelper.print_pin_table(sensor.pins, sensor.name)
+                input("Press Enter to continue...")
             
-            if choice.lower() == 'x':
+            elif choice.lower() == 'x':
                 sensor.cleanup()
                 self.completed = True
                 
@@ -409,9 +303,14 @@ class UserInterface:
             for i, action in enumerate(actuator.actions):
                 option_list.append(f"{i + 1} - {action.label} ({action.description})")
             
-            choice = self.show_menu(title=f"{actuator.name} - Available Actions", allow_back=True, options=option_list, color="cyan")
+            choice = self.show_menu(title=f"{actuator.name} - Available Actions", allow_back=True, allow_show_pin=True, options=option_list, color="cyan")
+
+
+            if choice.lower() == 'i':
+                DisplayHelper.print_pin_table(actuator.pins, actuator.name)
+                input("Press Enter to continue...")
             
-            if choice.lower() == 'x':
+            elif choice.lower() == 'x':
                 actuator.cleanup()
                 self.completed = True
                 
