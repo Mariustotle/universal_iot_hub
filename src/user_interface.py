@@ -85,7 +85,7 @@ class UserInterface:
                 await self.actuator_selection_menu()
 
             elif choice.lower() == "i":
-                DisplayHelper.print_pin_table(self.catalog.device.device_pins, self.catalog.device.name)
+                DisplayHelper.print_pin_table(self.catalog.device.get_pin_display_matrix(), self.catalog.device.name, color="cyan")
                 input("Press Enter to continue...")
 
             elif choice.lower() == "x":
@@ -186,7 +186,7 @@ class UserInterface:
             choice = self.show_menu(title=f"{sensor.name} - Reading Options", allow_back=True, allow_show_pin=True, options=option_list, color="cyan")
 
             if choice.lower() == 'i':
-                DisplayHelper.print_pin_table(sensor.pins, sensor.name)
+                DisplayHelper.print_pin_table(sensor.get_pin_display_matrix(), sensor.name, color="cyan")
                 input("Press Enter to continue...")
             
             elif choice.lower() == 'x':
@@ -307,7 +307,7 @@ class UserInterface:
 
 
             if choice.lower() == 'i':
-                DisplayHelper.print_pin_table(actuator.pins, actuator.name)
+                DisplayHelper.print_pin_table(actuator.get_pin_display_matrix(), actuator.name, color="cyan")
                 input("Press Enter to continue...")
             
             elif choice.lower() == 'x':
