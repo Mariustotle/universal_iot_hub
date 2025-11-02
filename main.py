@@ -20,10 +20,10 @@ def main():
     logger.info(f'Starting IOT Hub')
 
     # Load configuration and peripherals
-    (catalog, device) = load_configuration()
+    catalog = load_configuration()
 
     # Launch interactive menu in the main thread
-    asyncio.run(UserInterface(catalog=catalog, device=device).main_menu())
+    asyncio.run(UserInterface(catalog=catalog).main_menu())
     
 
 def load_configuration():
@@ -36,14 +36,14 @@ def load_configuration():
     device = DeviceFactory.create_device(config.Device, config.Adapter, config.Simulator)
 
     print('Setting up peripheral catalog')    
-    catalog = DeviceSetup.initialize(config)
+    catalog = DeviceSetup.initialize(config=config, device=device)
 
     summary = catalog.get_device_configuration_summary()
     print('Configuration Loaded.')
     
     SplashScreen.display_configuration_summary(summary, 5)
 
-    return (catalog, device)
+    return catalog
 
 if __name__ == "__main__":
     main()
