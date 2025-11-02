@@ -74,7 +74,7 @@ class UserInterface:
 
     async def main_menu(self):
         while not self.completed:            
-            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)", "3 - Device Diagnostics"]
+            option_list = ["1 - Read sensor (Get sensor reading)", "2 - Use actuator (Action something)", "3 - Device Details"]
             choice = self.show_menu(title="Main Menu", options=option_list, color="cyan")
 
             if choice == "1":
@@ -82,7 +82,7 @@ class UserInterface:
             elif choice == "2":
                 await self.actuator_selection_menu()
             elif choice == "3":
-                await self.device_diagnostics_menu()
+                await self.device_details_menu()
             elif choice.lower() == "x":
                 self.completed = True
                 break
@@ -94,22 +94,46 @@ class UserInterface:
         Env.clear_screan()
 
 
-    async def device_diagnostics_menu(self):
+    async def device_details_menu(self):
 
         if self.catalog.device_type is None:
-            Env.print("No device diagnostics available in catalog.")
+            Env.print("No device details available...")
             time.sleep(2)
             return        
 
-        Env.clear_screan()
-        Env.print(f"Gathering diagnostics for {self.catalog.device_type.value}...")
-        time.sleep(1)
 
-        # diagnostics = DeviceFactory.create_device(self.catalog.device_type, self.catalog.adapter_type, self.catalog.simulated)
-        # diagnostics.health_overview()
+        while not self.completed:
+            option_list = []
+            option_list.append(f"1. Display Device Pins")
+            option_list.append(f"2. Run device diagnostics")
+      
 
-        Env.print("Press any key to continue")
-        input()
+            choice = self.show_menu(title="Select device option", allow_back=True, options=option_list, color="cyan")
+            
+            if choice.lower() == 'x':
+                self.completed = True      
+                break      
+            
+            elif choice.lower() == 'b':
+                break
+            
+            else:
+                try:
+                    
+                    if choice.lower() == '1':
+                        print('Display device pins')
+                    
+                    elif choice.lower() == '2':
+                        print('Do device diagnostics')
+
+                    else:
+                        raise Exception(f'{choice.lower()} is not a valid selection, please try again.')
+
+                except (ValueError, IndexError):
+                    Env.print("Invalid selection. Returning to main menu.")
+                    time.sleep(2)
+                    return
+
 
 
 
