@@ -1,17 +1,18 @@
 from typing import List
 from common.environment import Env
+from peripherals.contracts.pins.pin_details import PinDetails
 from peripherals.contracts.pins.pin_display import PinDisplay
 
 
 class DisplayHelper:
 
     @staticmethod
-    def print_pin_table(pin_matrix: List[List['PinDisplay']], name: str, color:str):
+    def print_pin_table(pin_matrix: List[List['PinDisplay']], pins:List[PinDetails], name: str, color:str):
         Env.clear_screan()
         Env.print_paragraph(
-            '-------------------------------------------------------------',
+            '===================================================================================================================',
             f'This is the pin layout for [{name}]',
-            '-------------------------------------------------------------',
+            '===================================================================================================================',
             'Turn the board so that the majority of the pins are at the bottom side of the board.',
             ''
         )
@@ -62,3 +63,28 @@ class DisplayHelper:
 
 
         Env.print()
+
+        has_additional_info = any(pin.has_additional_info for pin in pins.values())
+
+
+        if has_additional_info:
+
+            Env.print()
+            Env.print('Additional Pin Information:')
+            Env.print('===================================================================================================================')
+
+            for key in pins.keys():
+                pin = pins[key]
+
+                if pin.has_additional_info:
+                    Env.print("- ", keep_same_line=True)
+                    Env.print(f"{str(pin.label)}".ljust(10), keep_same_line=True, color="light_cyan")
+                    Env.print(f"{key.vertical_position}/{key.horizontal_position}".ljust(6), keep_same_line=True)
+                    Env.print(f" {str(pin)}")
+
+
+            Env.print('===================================================================================================================')
+            Env.print()
+        
+
+        

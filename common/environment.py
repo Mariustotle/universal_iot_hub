@@ -7,6 +7,7 @@ import platform
 class Env:
 
     _ansi_colors = {
+        # --- Standard Colors ---
         "black": "30",
         "red": "31",
         "green": "32",
@@ -15,15 +16,61 @@ class Env:
         "magenta": "35",
         "cyan": "36",
         "white": "37",
-        "bright_black": "90",
+
+        # --- Bright (High Intensity) Colors ---
+        "bright_black": "90",      # often looks like gray/dark gray
         "bright_red": "91",
         "bright_green": "92",
         "bright_yellow": "93",
         "bright_blue": "94",
         "bright_magenta": "95",
         "bright_cyan": "96",
-        "bright_white": "97"
+        "bright_white": "97",
+
+        # --- Common Aliases ---
+        "gray": "90",              # alias for bright_black
+        "grey": "90",
+        "light_gray": "37",
+        "dark_gray": "90",
+        "light_red": "91",
+        "light_green": "92",
+        "light_yellow": "93",
+        "light_blue": "94",
+        "light_magenta": "95",
+        "light_cyan": "96",
+        "light_white": "97",
+
+        # --- Background Colors ---
+        "bg_black": "40",
+        "bg_red": "41",
+        "bg_green": "42",
+        "bg_yellow": "43",
+        "bg_blue": "44",
+        "bg_magenta": "45",
+        "bg_cyan": "46",
+        "bg_white": "47",
+
+        # --- Bright Backgrounds ---
+        "bg_bright_black": "100",
+        "bg_bright_red": "101",
+        "bg_bright_green": "102",
+        "bg_bright_yellow": "103",
+        "bg_bright_blue": "104",
+        "bg_bright_magenta": "105",
+        "bg_bright_cyan": "106",
+        "bg_bright_white": "107",
+
+        # --- Reset & Style Modifiers ---
+        "reset": "0",
+        "bold": "1",
+        "dim": "2",
+        "italic": "3",
+        "underline": "4",
+        "blink": "5",
+        "reverse": "7",
+        "hidden": "8",
     }
+
 
     @staticmethod
     def monitor_until_keypress(callback, interval_seconds: int = 5):
