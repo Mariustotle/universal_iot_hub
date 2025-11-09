@@ -50,7 +50,7 @@ class DeviceSetup:
                     sensors_config.append(sensor_config)    
 
 
-        catalog = DeviceCatalog(is_simulated=config.Simulator, 
+        catalog = DeviceCatalog(is_simulated=config.Simulator.enabled, 
             device=device,
             device_type=config.Device,
             adapter_type=config.Adapter,
