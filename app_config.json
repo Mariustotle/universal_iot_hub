@@ -34,43 +34,10 @@
             {
                 "name": "Server Room Temperature",
                 "driver": "dht22",
-                "gpio_pin": 12,
+                "gpio_pin": 26,
                 "measurement": "Celsius"
             }
-        ],
-        "TemperatureSwitches" :
-        [
-            {
-                "name": "Office Temp and Humidity",
-                "driver": null,
-                "gpio_out_pin": 16,
-                "switch_threshold": 25.0,
-                "measurement": "Celsius"
-            }
-        ],
-        "TDSSensors" : 
-        [
-            {
-                "name": "Fish Tank TDS Sensor",
-                "analog_digital_converter_name": "ADC (TDS)",
-                "adc_channel": 1,
-                "number_of_readings": 2,
-                "delay_between_readings": 0.1,
-                "driver": null               
-            }
-        ]
+        ]      
     },
-    "Actuators" : {
-        "RelaySwitches" : 
-        [
-            {
-                "name": "Bedroom Light",
-                "driver": "jqc3f_05vdc_c",
-                "default_power_status": "Off",
-                "gpio_pin": 18,
-                "is_low_voltage_trigger": true,
-                "use_direction_control": true
-            }
-        ]
-    }
+    "Actuators" : {}
 }    
