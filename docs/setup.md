@@ -142,8 +142,8 @@ git submodule update --init --recursive
         chmod 700 ~/.ssh
 
         # Fix file permissions (if they exist)
-        chmod 600 /home/pi/.ssh/authorized_keys
-        chmod 600 ~/.ssh/authorized_keys
+        sudo chmod 600 /home/pi/.ssh/authorized_keys
+        sudo chmod 600 ~/.ssh/authorized_keys
         
         # View SSH auth options
         grep -i auth /etc/ssh/sshd_config
