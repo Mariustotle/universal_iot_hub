@@ -28,6 +28,9 @@ git clean -fd
 git fetch
 git pull --recurse-submodules
 
+# Git Add
+git add --all
+
 # Commit
 git -m commit 'your-message-here'
 git push
