@@ -201,7 +201,6 @@ class UserInterface:
             
             elif choice.lower() == 'b':
                 sensor.cleanup()
-                self.completed = True
 
                 Env.clear_screan()
                 Env.print(f"Finished cleaning up {sensor.name}...")
@@ -322,7 +321,6 @@ class UserInterface:
             
             elif choice.lower() == 'b':
                 actuator.cleanup()
-                self.completed = True
 
                 Env.clear_screan()
                 Env.print(f"Finished cleaning up {actuator.name}...")
