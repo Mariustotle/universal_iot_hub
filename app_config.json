@@ -1,5 +1,24 @@
 {
-    "Simulator": true,
+    "Simulator": {
+        "enabled": true,
+        "default_supported_state": false,
+        "default_enabled_state": false,
+        "i2c": [
+            {
+            "instance": 0,
+            "supported": true,
+            "enabled": false
+            },
+            {
+            "instance": 1,
+            "supported": true,
+            "enabled": true
+            }
+        ],
+        "uart": [],
+        "spi": [],
+        "pwm": []
+    },
     "Device": "Raspberry Pi 3",
     "Adapter": "RaspberryOSTrixy",
     "logging": {
