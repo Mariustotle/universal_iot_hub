@@ -19,7 +19,7 @@
         "spi": [],
         "pwm": []
     },
-    "Device": "Raspberry Pi 3",
+    "Device": "Raspberry Pi 4",
     "Adapter": "RaspberryOSTrixy",
     "logging": {
         "file_name": "app.log",
@@ -29,7 +29,16 @@
         "max_number_of_files": 14
     },
     "Peripherals": [
-         {
+        {
+            "type": "DigitalI2CTemperatureSensor",
+            "name": "Outside Braai Area Temperature",
+            "driver": "aht10",
+            "gpio_pin_sda": 0,
+            "gpio_pin_scl": 1,
+            "measurement": "Celsius"
+        },
+        {
+            "ignore": true,
             "type": "RelaySwitch",
             "name": "Bedroom Light",
             "driver": null,
