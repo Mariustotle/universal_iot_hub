@@ -12,8 +12,7 @@ from src.print_helper import DisplayHelper
 class UserInterface:
     completed:bool = False
     catalog:DeviceCatalog = None
-    fixed_width:int = 120
-    
+    fixed_width:int = 120    
 
     def __init__(self, catalog: DeviceCatalog):
         self.catalog = catalog

@@ -1,5 +1,5 @@
 from typing import Optional
-from peripherals.contracts.configuration_summary import ConfigurationSummary
+from peripherals.contracts.configuration.configuration_summary import ConfigurationSummary
 from common.environment import Env
 import time
 

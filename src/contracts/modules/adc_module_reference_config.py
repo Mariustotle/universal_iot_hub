@@ -1,9 +1,9 @@
 from typing import Any, Optional
-from pydantic import BaseModel
 
 from peripherals.communication.analog_digital_converter.adc_module import ADCModule
+from peripherals.contracts.configuration.config_base import ConfigBase
 
-class ADCModuleReferenceConfig(BaseModel):
+class ADCModuleReferenceConfig(ConfigBase):
     name: str = None
     channel: int = None
     _adc:Optional[Any] = None
