@@ -38,7 +38,7 @@
             "measurement": "Celsius"
         },
         {
-            "ignore": false,
+            "ignore": true,
             "type": "RelaySwitch",
             "name": "Bedroom Light",
             "driver": null,
@@ -48,7 +48,7 @@
             "use_direction_control": true
         },
         {
-            "ignore": false,
+            "ignore": true,
             "type": "DigitalTemperatureSensor", 
             "name": "Server Room Temperature",
             "driver": "dht22",
@@ -56,7 +56,7 @@
             "measurement": "Celsius"
         },
         {
-            "ignore": false,
+            "ignore": true,
             "type": "TemperatureSwitch",
             "name": "Office Temp and Humidity",
             "driver": null,
@@ -66,7 +66,7 @@
         },
         {
             "ignore": false,
-            "type": "DigitalTemperatureSensor",
+            "type": "TDSSensor",
             "name": "Water Particle Meter",
             "driver": null,
             "number_of_readings": 5,
