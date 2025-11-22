@@ -7,6 +7,7 @@ from src.contracts.modules.i2c_multiplexer_reference_config import I2CMultiplexe
 
 class I2CBase(ConfigBase):
     i2c_address: I2CAddress = I2CAddress.Unknown
+    channel: int = None
     gpio_pin_sda:PinConfig = None
     gpio_pin_scl:PinConfig = None
     multiplexer_details: Optional[I2CMultiplexerReferenceConfig] = None
