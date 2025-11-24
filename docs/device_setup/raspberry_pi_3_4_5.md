@@ -49,7 +49,44 @@ Serial Port             | Provides a serial communication interface (TX/RX pins)
 Serial Console          | Lets you access the Raspberry Pi’s terminal (command line) through the UART serial pins.
 
 
+### Enable I2C
+1. sudo nano /boot/firmware/config.txt
+2. Test
+   
+   ```
+   i2cdetect -y 1
+   ```
+3. Enable 
+   
+   ```
+   # I2C 0
+   dtparam=i2s=on
 
+   # I2C 1
+   dtparam=i2c_arm=on
+   ```
+
+   Enable the correct modules
+   lsmod | grep i2c
+
+   ```
+   # Edit the modules
+   sudo nano /etc/modules
+   ```
+
+   ```
+   i2c-dev
+   i2c-bcm2835
+   ```
+
+   Install I2C tools
+
+   ```
+   sudo apt update
+   sudo apt install -y i2c-tools
+
+   sudo reboot
+   ```
 
 
 ## 3. Configure via PowerShell
